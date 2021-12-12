@@ -1,20 +1,19 @@
-import axios from 'axios';
 import Spreads from '../models/spreads.js';
 import { getWeekNumber } from './weeks.js';
 
 // An api key is emailed to you when you sign up to a plan
 // Get a free API key at https://api.the-odds-api.com/
-const apiKey = '0431c6ebd89b9549f0e367b11279c045'
+// const apiKey = '0431c6ebd89b9549f0e367b11279c045'
 
-const sportKey = 'americanfootball_nfl' // use the sport_key from the /sports endpoint below, or use 'upcoming' to see the next 8 games across all sports
+// const sportKey = 'americanfootball_nfl' // use the sport_key from the /sports endpoint below, or use 'upcoming' to see the next 8 games across all sports
 
-const regions = 'us' // uk | us | eu | au. Multiple can be specified if comma delimited
+// const regions = 'us' // uk | us | eu | au. Multiple can be specified if comma delimited
 
-const markets = 'spreads' // h2h | spreads | totals. Multiple can be specified if comma delimited
+// const markets = 'spreads' // h2h | spreads | totals. Multiple can be specified if comma delimited
 
-const oddsFormat = 'decimal' // decimal | american
+// const oddsFormat = 'decimal' // decimal | american
 
-const dateFormat = 'iso' // iso | unix
+// const dateFormat = 'iso' // iso | unix
 
 /*
     First get a list of in-season sports
@@ -35,35 +34,35 @@ const dateFormat = 'iso' // iso | unix
 //     console.log(error.response.data)
 // })
 
-export const fetchSpreads = () => {
-    axios.get(`https://api.the-odds-api.com/v4/sports/${sportKey}/odds`, {
-        params: {
-            apiKey,
-            regions,
-            markets,
-            oddsFormat,
-            dateFormat,
-        }
-    })
-    .then(response => {
-        // response.data.data contains a list of live and 
-        //   upcoming events and odds for different bookmakers.
-        // Events are ordered by start time (live events are first)
+// export const fetchSpreads = () => {
+//     axios.get(`https://api.the-odds-api.com/v4/sports/${sportKey}/odds`, {
+//         params: {
+//             apiKey,
+//             regions,
+//             markets,
+//             oddsFormat,
+//             dateFormat,
+//         }
+//     })
+//     .then(response => {
+//         // response.data.data contains a list of live and 
+//         //   upcoming events and odds for different bookmakers.
+//         // Events are ordered by start time (live events are first)
 
-        // Check your usage
-        console.log('Remaining requests',response.headers['x-requests-remaining'])
-        console.log('Used requests',response.headers['x-requests-used'])
+//         // Check your usage
+//         console.log('Remaining requests',response.headers['x-requests-remaining'])
+//         console.log('Used requests',response.headers['x-requests-used'])
 
-        const mapped = mapSpreadsObject(response.data);
+//         const mapped = mapSpreadsObject(response.data);
 
-        console.log('mapped object', mapped);
-        saveSpreads(JSON.stringify(mapped));
-    }) 
-    .catch(error => {
-        console.log('Error status', error)
-        console.log(error.response?.data)
-    }) 
-}
+//         console.log('mapped object', mapped);
+//         saveSpreads(JSON.stringify(mapped));
+//     }) 
+//     .catch(error => {
+//         console.log('Error status', error)
+//         console.log(error.response?.data)
+//     }) 
+// }
 
 
 export const saveSpreads = (spreads) => {

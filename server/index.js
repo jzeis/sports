@@ -11,7 +11,7 @@ import spreadsRouter from './routes/spreads.js';
 import teamRouter from './routes/team.js';
 import userRouter from "./routes/user.js";
 import { getScores } from './utilities/scores.js';
-import { fetchSpreads, saveSpreads } from './utilities/spreads.js';
+import { saveSpreads } from './utilities/spreads.js';
 
 const app = express();
 
@@ -40,7 +40,3 @@ scheduleSpreads();
 getScores().then(scores => {
   saveSpreads(JSON.stringify(scores));
 });
-
-if (false) {
-  fetchSpreads();
-}
