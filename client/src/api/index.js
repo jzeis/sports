@@ -1,6 +1,7 @@
 import axios from 'axios';
+import { getBaseUrl } from './api-contants';
 
-export const API = axios.create({ baseURL: 'http://localhost:5000' });
+export const API = axios.create({ baseURL: getBaseUrl() });
 
 API.interceptors.request.use((req) => {
   if (localStorage.getItem('profile')) {
@@ -18,5 +19,4 @@ export const deletePost = (id) => API.delete(`/posts/${id}`);
 
 export const signIn = (formData) => API.post('/user/signin', formData);
 export const signUp = (formData) => API.post('/user/signup', formData);
-
 

@@ -46,7 +46,7 @@ export const BetRow = (props) => {
 
 export default class BetList extends Component {
   static processBets() {
-    API.put('http://localhost:5000/bet/processAll')
+    API.put('/bet/processAll')
       .then((res) => console.log('proccessed bets', res));
   }
 

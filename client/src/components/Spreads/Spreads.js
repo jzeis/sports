@@ -22,7 +22,7 @@ export default class SpreadsList extends Component {
       .then(([league, team, bets]) => {
         this.setState({ league: league.data, team: team.data, bets: bets.data });
 
-        API.get(`http://localhost:5000/spreads/${league.data.currentWeek}`)
+        API.get(`/spreads/${league.data.currentWeek}`)
           .then((response) => {
             this.setState({ spreads: response.data });
           })
@@ -54,7 +54,7 @@ export default class SpreadsList extends Component {
       // id
     };
 
-    API.post('http://localhost:5000/bet/add', bet)
+    API.post('/bet/add', bet)
       .then(({ data: addedBet }) => {
         const { bets, team } = this.state;
         this.setState({ bets: bets.push(bet), team: { ...team, balance: team.balance - addedBet.amount } });

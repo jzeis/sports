@@ -5,11 +5,15 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "transpile": "babel ./ --out-dir dist-server"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@babel/cli": "^7.16.0",
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.4",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
@@ -18,10 +22,12 @@
     "jsonwebtoken": "^8.5.1",
     "migrate": "^1.7.0",
     "mongoose": "^5.9.29",
-    "node-cron": "^3.0.0"
+    "node-cron": "^3.0.0",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2"
   },
   "devDependencies": {
     "axios": "^0.23.0",
-    "nodemon": "^2.0.6"
+    "nodemon": "^2.0.15"
   }
 }

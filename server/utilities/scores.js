@@ -45,7 +45,7 @@ export const getSpread = (teamObj, spreadString = '') => {
         score: team.score,
         name: team.team.name,
         odds: {
-          spread: getSpread(team.team, team.odds[0]?.details),
+          spread: getSpread(team.team, team.odds?.[0]?.details),
           overUnder: team.odds?.[0].overUnder,
         },
       })),
