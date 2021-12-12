@@ -1,12 +1,12 @@
-import { makeStyles } from '@material-ui/core/styles';
 import { deepPurple } from '@material-ui/core/colors';
+import { makeStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme) => ({
   appBar: {
     borderRadius: 15,
     margin: '30px 0',
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: '10px 50px',
@@ -22,6 +22,7 @@ export default makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'flex-end',
     width: '400px',
+    flexDirection: 'row',
   },
   profile: {
     display: 'flex',
