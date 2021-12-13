@@ -1,6 +1,6 @@
 const BASE_URLS = {
   dev: 'http://localhost:5000',
-  prod: 'http://api.jzeis.com',
+  prod: 'https://api.jzeis.com',
 };
 
 export const getBaseUrl = () => {
