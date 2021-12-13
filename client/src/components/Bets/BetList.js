@@ -56,7 +56,7 @@ export default class BetList extends Component {
       bets: [],
       scores: [],
       amountWon: 0,
-      // week: '',
+      week: '',
     };
 
     this.calculateBets = this.calculateBets.bind(this);
