@@ -8,6 +8,9 @@
     "start": "nodemon index.js",
     "transpile": "babel ./ --out-dir dist-server"
   },
+  "engines" : { 
+    "node" : "14.17.6" 
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
