@@ -26,7 +26,8 @@ app.use('/bet', betRouter);
 app.use('/league', leagueRouter);
 app.use('/team', teamRouter);
 
-const CONNECTION_URL = 'mongodb+srv://jcz:Hova8242$@cluster0.2lvfr.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+const dbName = process.env.NODE_ENV === 'production' ? 'sportsProd' : 'myFirstDatabase';
+const CONNECTION_URL = `mongodb+srv://jcz:Hova8242$@cluster0.2lvfr.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 const PORT = process.env.PORT|| 5000;
 
 mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: true })

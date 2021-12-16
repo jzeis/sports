@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "nodemon index.js",
-    "transpile": "babel ./ --out-dir dist-server"
+    "start:prod": "NODE_ENV=development pm2 index.js"
   },
   "engines" : { 
     "node" : "14.17.6" 
