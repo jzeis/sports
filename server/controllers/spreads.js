@@ -29,7 +29,12 @@ export const getSpreads = async (req, res) => {
                             && isBefore(currentTime, gameDate));
                     })
                 }
-            res.json(spreadList);
+                const returnObj = {
+                    spreads: spreadList,
+                    id: data.id
+                };
+
+            res.json(returnObj);
         })
     } catch (error) {
         res.status(400).json('Error: ' + error);

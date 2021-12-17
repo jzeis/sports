@@ -9,12 +9,31 @@ import Team from '../models/team.js';
 import { getWeekNumber } from '../utilities/weeks.js';
 const router = express.Router();
 
+const saveBet = (bet, req, res) => {
+  bet.save()
+  .then(() => {
+    // Subtract bet amount from team
+    Team.updateOne({_id: req.body.teamId, ownerId: req.userId},
+      {$inc: { balance: -Math.abs(bet.amount) }},
+      (err, result) => {
+        if (err) { console.log(err); res.send(err); return;}
+      })
+    res.json(bet)
+  })
+  .catch(err => res.status(400).json('Error: ' + err));
+}
+
 router.post('/add', auth, (req, res) => {
   if (!req.userId) {
     return res.json({ message: "Unauthenticated" });
   }
   const {teamId, team, points, gameDate, type} = req.body;
   const numAmount = parseInt(req.body.amount);
+
+  if (numAmount <= 0) {
+    return res.status(400).json('Invalid bet amount');
+  }
+
   const newBet = new Bet({
     userId: req.userId,
     teamId: teamId,
@@ -25,19 +44,15 @@ router.post('/add', auth, (req, res) => {
     gameWeek: getWeekNumber(gameDate),
     gameDate: new Date(gameDate),
     processed: false
-  }); 
+  });
 
-  newBet.save()
-    .then(() => {
-      // Subtract bet amount from team
-      Team.updateOne({_id: req.body.teamId, ownerId: req.userId},
-        {$inc: { balance: -Math.abs(numAmount) }},
-        (err, result) => {
-          if (err) { console.log(err); res.send(err); return;}
-        })
-      res.json(newBet)
-    })
-    .catch(err => res.status(400).json('Error: ' + err));
+  Team.findById(teamId).then(team => {
+    if (team?.balance < numAmount) {
+      return res.status(400).json('Not enough money for bet');
+    }
+
+    saveBet(newBet, req, res);
+  })
 });
 
 router.get('/:teamId/:week?', auth, (req, res) => {

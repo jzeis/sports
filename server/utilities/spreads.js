@@ -70,7 +70,8 @@ export const saveSpreads = (spreads) => {
     const week = getWeekNumber();
     const newSpreads = {
         spreads: spreads,
-        name: `week${week}-spreads`
+        name: `week${week}-spreads`,
+        id: new Date().getTime().toString()
     };
 
     const query = { name: newSpreads.name };

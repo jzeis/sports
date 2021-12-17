@@ -9,7 +9,10 @@ export default class SpreadsList extends Component {
     this.state = {
       league: {},
       team: {},
-      spreads: [],
+      spreadsData: {
+        spreads: [],
+        id: '',
+      },
     };
 
     this.placeBet = this.placeBet.bind(this);
@@ -24,7 +27,8 @@ export default class SpreadsList extends Component {
 
         API.get(`/spreads/${league.data.currentWeek}`)
           .then((response) => {
-            this.setState({ spreads: response.data });
+            console.log('spreads response', response);
+            this.setState({ spreadsData: response.data });
           })
           .catch((error) => {
             console.log(error);
@@ -34,24 +38,19 @@ export default class SpreadsList extends Component {
   }
 
   spreadsList() {
-    const { team, spreads } = this.state;
-    return spreads.map((currentGame) => <GameRow game={currentGame} maxBet={team.balance} key={currentGame.id} placeBetFunc={this.placeBet} />);
+    const { team, spreadsData } = this.state;
+    return spreadsData.spreads.map((currentGame) => <GameRow game={currentGame} maxBet={team.balance} key={currentGame.id} placeBetFunc={this.placeBet} />);
   }
 
-  placeBet(betObj, amount, gameId, date) {
+  placeBet(betObj) {
     const { teamId } = this.props.match?.params || {};
-    const { team, points, type } = betObj;
-    console.log(betObj);
-    console.log(this.props);
+    const { id } = this.state.spreadsData;
 
+    // Get betObj with bet data and add our team id and id for all spreads
     const bet = {
-      team,
+      ...betObj,
       teamId,
-      points: parseInt(points, 10),
-      type,
-      amount,
-      gameDate: date,
-      // id
+      id,
     };
 
     API.post('/bet/add', bet)

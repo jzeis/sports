@@ -35,7 +35,7 @@ export default class Team extends Component {
         });
 
         // this.getScores(league.data.currentWeek);
-        this.getScores(14);
+        this.getScores(15);
       })
       .catch((error) => console.log(error));
   }

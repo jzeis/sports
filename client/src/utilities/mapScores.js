@@ -1,4 +1,7 @@
 export const getSpread = (teamObj, spreadString = '') => {
+  if (spreadString.toLowerCase() === 'even') {
+    return 0;
+  }
   const [teamAbbreviation, spread] = spreadString.split(' ');
   const spreadNum = parseInt(spread, 10);
   // If team matches, return spread
@@ -26,6 +29,7 @@ export const mapScores = (scores) => {
       abbreviation: team.team.abbreviation,
       score: team.score,
       name: team.team.name,
+      id: team.id,
       odds: {
         spread: getSpread(team.team, team.odds?.[0]?.details),
         overUnder: team.odds?.[0].overUnder,

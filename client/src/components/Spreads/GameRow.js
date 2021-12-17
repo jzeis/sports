@@ -1,3 +1,4 @@
+import { betTypes } from 'constants/betTypes.constants';
 import React, { useState } from 'react';
 import CurrencyFormat from 'react-currency-format';
 
@@ -5,17 +6,26 @@ const GameRow = (props) => {
   const { game, placeBetFunc, maxBet } = props;
   const homeTeamObj = game.teams.find((team) => team.homeAway === 'home');
   const awayTeamObj = game.teams.find((team) => team.homeAway === 'away');
-  // console.log('teamobj', game);
-  homeTeamObj.team = homeTeamObj.abbreviation;
-  awayTeamObj.team = awayTeamObj.abbreviation;
+
+  const homeTeamSpread = {
+    team: homeTeamObj.abbreviation,
+    points: homeTeamObj.odds.spread,
+    type: betTypes.points,
+  };
+
+  const awayTeamSpread = {
+    team: awayTeamObj.abbreviation,
+    points: awayTeamObj.odds.spread,
+    type: betTypes.points,
+  };
 
   const underObj = {
     team: `${homeTeamObj.abbreviation}/${awayTeamObj.abbreviation}`,
     points: homeTeamObj.odds.overUnder || '50',
-    type: 'under',
+    type: betTypes.under,
   };
 
-  const overObj = { ...underObj, type: 'over' };
+  const overObj = { ...underObj, type: betTypes.over };
 
   const [teamBet, setTeamBet] = useState(null);
   const [betAmount, setBetAmount] = useState();
@@ -68,6 +78,16 @@ const GameRow = (props) => {
     },
   };
 
+  const placeBet = () => {
+    const betObj = {
+      ...teamBet,
+      points: parseInt(teamBet.points, 10),
+      amount: betAmount,
+      gameDate: game.date,
+    };
+    placeBetFunc(betObj);
+  };
+
   return (
     <div>
       <div style={styles.containerStyles}>
@@ -78,32 +98,30 @@ const GameRow = (props) => {
         <div style={{ gridArea: 'label4' }} className="label">Amount</div>
 
         <div style={styles.gridAwayTeam} className="team bet-cell"><p>{awayTeamObj.name}</p></div>
-        {/* <div style={styles.gridAwayTeam} className="team bet-cell"><p>{awayTeamObj.name.split(' ').pop()}</p></div> */}
         <div style={styles.gridAwaySpread} className="bet-spread bet-cell">
-          <input className="bet-input sr-only" type="radio" onChange={() => setTeamBet(awayTeamObj)} value={homeTeamObj.name} name={`${game.id}-radio`} id={`${game.id}-input-${awayTeamObj.name}`} />
-          <label className={`bet-label ${teamBet === awayTeamObj ? 'selected' : ''}`} htmlFor={`${game.id}-input-${awayTeamObj.name}`}>
-            {awayTeamObj.odds.spread}
+          <input className="bet-input sr-only" type="radio" onChange={() => setTeamBet(awayTeamSpread)} value={awayTeamObj.name} name={`${game.id}-radio`} id={`${game.id}-input-${awayTeamObj.name}`} />
+          <label className={`bet-label ${JSON.stringify(teamBet) === JSON.stringify(awayTeamSpread) ? 'selected' : ''}`} htmlFor={`${game.id}-input-${awayTeamObj.name}`}>
+            {awayTeamSpread.points}
           </label>
         </div>
         <div style={styles.gridOverUnder} className="under bet-cell">
           <input className="bet-input sr-only" type="radio" onChange={() => setTeamBet(underObj)} value={homeTeamObj.name} name={`${game.id}-radio`} id={`${game.id}-input-under`} />
           <label className={`bet-label ${JSON.stringify(teamBet) === JSON.stringify(underObj) ? 'selected' : ''}`} htmlFor={`${game.id}-input-under`}>
-            {underObj.points}
+            u{underObj.points}
           </label>
         </div>
 
         <div style={styles.gridHomeTeam} className="team bet-cell"><p>{homeTeamObj.name}</p></div>
-        {/* <div style={styles.gridHomeTeam} className="team bet-cell"><p>{homeTeamObj.name.split(' ').pop()}</p></div> */}
         <div style={styles.gridHomeSpread} className="bet-spread bet-cell">
-          <input className="bet-input sr-only" type="radio" onChange={() => setTeamBet(homeTeamObj)} value={homeTeamObj.name} name={`${game.id}-radio`} id={`${game.id}-input-${homeTeamObj.name}`} />
-          <label className={`bet-label ${teamBet === homeTeamObj ? 'selected' : ''}`} htmlFor={`${game.id}-input-${homeTeamObj.name}`}>
-            <span>{homeTeamObj.odds.spread}</span>
+          <input className="bet-input sr-only" type="radio" onChange={() => setTeamBet(homeTeamSpread)} value={homeTeamObj.name} name={`${game.id}-radio`} id={`${game.id}-input-${homeTeamObj.name}`} />
+          <label className={`bet-label ${JSON.stringify(teamBet) === JSON.stringify(homeTeamSpread) ? 'selected' : ''}`} htmlFor={`${game.id}-input-${homeTeamObj.name}`}>
+            <span>{homeTeamSpread.points}</span>
           </label>
         </div>
         <div style={styles.gridOverUnder} className="under bet-cell">
           <input className="bet-input sr-only" type="radio" onChange={() => setTeamBet(overObj)} value={homeTeamObj.name} name={`${game.id}-radio`} id={`${game.id}-input-over`} />
           <label className={`bet-label ${JSON.stringify(teamBet) === JSON.stringify(overObj) ? 'selected' : ''}`} htmlFor={`${game.id}-input-over`}>
-            {overObj.points}
+            o{overObj.points}
           </label>
         </div>
         <div style={styles.gridAmount} className="amount bet-cell">
@@ -117,9 +135,14 @@ const GameRow = (props) => {
             onValueChange={(value) => setBetAmount(value.value)}
           />
           <label htmlFor={`${game.id}-amount`} className="sr-only">Bet amount</label>
-          <button className="button" type="button" disabled={!teamBet || !betAmount} onClick={() => placeBetFunc(teamBet, betAmount, game.id, game.date)}>Place bet</button>
+          <button className="button" type="button" disabled={!teamBet || !betAmount} onClick={() => placeBet()}>Place bet</button>
         </div>
       </div>
+      {/* <pre>
+        {JSON.stringify(underObj)}
+        {JSON.stringify(teamBet)}
+        {JSON.stringify(teamBet) === JSON.stringify(underObj) ? 'true' : 'false'}
+      </pre> */}
     </div>
   );
 };

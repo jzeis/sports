@@ -17,6 +17,9 @@ export const getScores = (week = getWeekNumber()) => {
 }
 
 export const getSpread = (teamObj, spreadString = '') => {
+    if (spreadString.toLowerCase() === 'even') {
+        return 0;
+    }
     const [teamAbbreviation, spread] = spreadString.split(' ');
     const spreadNum = parseInt(spread, 10);
     // If team matches, return spread
@@ -31,6 +34,7 @@ export const getSpread = (teamObj, spreadString = '') => {
     const games = scores.events.map((event) => event.competitions[0].competitors.map((team) => ({
       ...team,
       status: event.status,
+      gameId: event.id,
       date: event.date,
       odds: event.competitions[0].odds,
     })));
@@ -44,11 +48,13 @@ export const getSpread = (teamObj, spreadString = '') => {
         abbreviation: team.team.abbreviation,
         score: team.score,
         name: team.team.name,
+        id: team.id,
         odds: {
           spread: getSpread(team.team, team.odds?.[0]?.details),
           overUnder: team.odds?.[0].overUnder,
         },
       })),
+      id: game[0]?.gameId,
       status: game[0]?.status?.type,
       date: game[0]?.date,
     }));

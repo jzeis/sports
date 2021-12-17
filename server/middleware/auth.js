@@ -12,11 +12,16 @@ const auth = async (req, res, next) => {
 
       req.userId = decodedData?.id;
       req.userName = decodedData?.name;
+      next();
     } 
+    else {
+      throw 'No Token'
+    }
 
-    next();
   } catch (error) {
-    console.log(error);
+    res.status(401).json({
+      error: new Error(error)
+    });
   }
 };
 
