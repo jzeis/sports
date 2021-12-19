@@ -28,8 +28,8 @@ export default class CreateLeague extends Component {
       password,
       maxTeams: 10,
       startingBalance,
-      startWeek: 5,
-      endWeek: 10,
+      startWeek: 15,
+      endWeek: 17,
     };
     API.post('/league/add', data)
       .then((response) => { console.log(response); });

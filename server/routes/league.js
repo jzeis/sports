@@ -1,11 +1,11 @@
  
 import express from 'express';
-const router = express.Router();
+import auth from '../middleware/auth.js';
 import League from '../models/league.js';
 import Team from '../models/team.js';
 import User from '../models/user.js';
-import auth from '../middleware/auth.js';
 import { getWeekNumber, weeksObj } from '../utilities/weeks.js';
+const router = express.Router();
 
 router.post('/add', auth, (req, res) => {
   if (!req.userId) {
@@ -32,7 +32,8 @@ router.post('/add', auth, (req, res) => {
           ownerId: req.userId,
           teamName: user.name,
           leagueId: newLeague._id,
-          balance: newLeague.startingBalance
+          balance: newLeague.startingBalance,
+          weekStartBalance: newLeague.startingBalance,
         }); 
 
         newLeague.teams.push(newTeam._id);

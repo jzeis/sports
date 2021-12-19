@@ -34,8 +34,9 @@ export default class Team extends Component {
           week: league.data.currentWeek,
         });
 
+        this.calculateBets();
         // this.getScores(league.data.currentWeek);
-        this.getScores(15);
+        this.getScores(this.state.week);
       })
       .catch((error) => console.log(error));
   }
@@ -149,8 +150,8 @@ export default class Team extends Component {
               {this.betList()}
             </tbody>
           </table>
-          <button type="button" onClick={this.calculateBets}>Calculate bets</button>
-          <button type="button" onClick={this.getOdds}>get odds</button>
+          {/* <button type="button" onClick={this.calculateBets}>Calculate bets</button>
+          <button type="button" onClick={this.getOdds}>get odds</button> */}
         </div>
       </div>
     );
