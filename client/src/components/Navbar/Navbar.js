@@ -13,6 +13,8 @@ const Navbar = () => {
   const history = useHistory();
   const classes = useStyles();
 
+  dispatch({ type: actionType.INIT_AUTH });
+
   const logout = () => {
     dispatch({ type: actionType.LOGOUT });
 
@@ -31,6 +33,7 @@ const Navbar = () => {
     }
 
     setUser(JSON.parse(localStorage.getItem('profile')));
+    console.log('user set', user);
   }, [location]);
 
   return (

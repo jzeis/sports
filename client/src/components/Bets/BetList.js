@@ -1,7 +1,7 @@
 import { API } from 'api';
 import axios from 'axios';
 import React, { Component } from 'react';
-import { calculateBets } from 'utilities/betOperations';
+import { calculateBets, formatBetType, formatGameTime } from 'utilities/betOperations';
 import { mapScores } from 'utilities/mapScores';
 
 export const BetRow = (props) => {
@@ -34,9 +34,9 @@ export const BetRow = (props) => {
   return (
     <tr>
       <td style={styles.gridTeam}>{bet.team}</td>
-      <td style={styles.gridSpread}>{bet.points}</td>
+      <td style={styles.gridSpread}>{formatBetType(bet)}</td>
       <td style={styles.gridAmount}>${bet.amount}</td>
-      <td style={styles.gridDate}>{new Date(bet.gameDate).toLocaleTimeString()}</td>
+      <td style={styles.gridDate}>{formatGameTime(bet.gameDate)}</td>
       <td style={styles.gridResult}>{bet.result}</td>
       {bet.teamName
           && <td>{bet.teamName}</td>}
@@ -73,9 +73,12 @@ export default class BetList extends Component {
       .catch((error) => console.log(error));
   }
 
-  getScores(week) {
+  getScores(week = 15) {
     axios.get(`http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?week=${week}`)
-      .then((res) => this.setState({ scores: mapScores(res.data) }));
+      .then((res) => {
+        this.setState({ scores: mapScores(res.data) });
+        this.calculateBets();
+      });
   }
 
   calculateBets() {
@@ -115,7 +118,7 @@ export default class BetList extends Component {
           <thead>
             <tr>
               <th style={{ gridArea: 'label1' }} className="label">Team</th>
-              <th style={{ gridArea: 'label2' }} className="label">Spread</th>
+              <th style={{ gridArea: 'label2' }} className="label">Bet</th>
               <th style={{ gridArea: 'label3' }} className="label">Amount</th>
               <th style={{ gridArea: 'label4' }} className="label">Game Date</th>
               <th style={{ gridArea: 'label5' }} className="label">Result</th>

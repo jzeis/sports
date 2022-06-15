@@ -26,6 +26,7 @@ export default function AccountMenu() {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -58,7 +59,7 @@ export default function AccountMenu() {
         <Typography sx={{ minWidth: 100 }}>Profile</Typography>
         <Tooltip title="Account settings">
           <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
-            <Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
+            <Avatar sx={{ width: 32, height: 32 }}>{user?.result?.name?.charAt(0) || 'M' }</Avatar>
           </IconButton>
         </Tooltip>
       </Box>

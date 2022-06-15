@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux';
-
-import posts from './posts';
 import auth from './auth';
+import bets from './bets';
+import leagues from './league';
+import scores from './scores';
+import teams from './teams';
 
-export const reducers = combineReducers({ posts, auth });
+export const reducers = combineReducers({ auth, leagues, bets, teams, scores });

@@ -1,5 +1,6 @@
 import { Container } from '@material-ui/core';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import AuthenticatedRoute from 'components/Auth/AuthenticatedRoute';
 import LeagueBets from 'components/League/LeagueBets';
 import AccountMenu from 'components/Navbar/Menu';
 import React from 'react';
@@ -10,7 +11,7 @@ import CreateLeague from './components/League/CreateLeague';
 import JoinLeague from './components/League/JoinLeague';
 import SpreadsList from './components/Spreads/Spreads';
 import Team from './components/Team/Team';
-import TeamsList from './components/Team/Teams';
+import TeamsList from './components/Team/TeamsList';
 
 const App = () => (
   <BrowserRouter>
@@ -18,15 +19,15 @@ const App = () => (
       <AccountMenu />
       {/* <Navbar /> */}
       <Switch>
-        <Route path="/" exact component={TeamsList} />
+        <AuthenticatedRoute path="/" exact component={TeamsList} />
         <Route path="/auth" exact component={Auth} />
-        <Route path="/league/create" exact component={CreateLeague} />
-        <Route path="/league/join" exact component={JoinLeague} />
-        <Route path="/teams" exact component={TeamsList} />
-        <Route path="/league/:leagueId" exact component={LeagueBets} />
-        <Route path="/league/:leagueId/team/:teamId" exact component={Team} />
-        <Route path="/league/:leagueId/team/:teamId/spreads" exact component={SpreadsList} />
-        <Route path="/league/:leagueId/team/:teamId/bets" exact component={BetList} />
+        <AuthenticatedRoute path="/league/create" exact component={CreateLeague} />
+        <AuthenticatedRoute path="/league/join" exact component={JoinLeague} />
+        <AuthenticatedRoute path="/teams" exact component={TeamsList} />
+        <AuthenticatedRoute path="/league/:leagueId" exact component={LeagueBets} />
+        <AuthenticatedRoute path="/league/:leagueId/team/:teamId" exact component={Team} />
+        <AuthenticatedRoute path="/league/:leagueId/team/:teamId/spreads" exact component={SpreadsList} />
+        <AuthenticatedRoute path="/league/:leagueId/team/:teamId/bets" exact component={BetList} />
       </Switch>
     </Container>
   </BrowserRouter>

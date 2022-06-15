@@ -25,6 +25,7 @@ export default class SpreadsList extends Component {
       .then(([league, team, bets]) => {
         this.setState({ league: league.data, team: team.data, bets: bets.data });
 
+        league.data.currentWeek = 15;
         API.get(`/spreads/${league.data.currentWeek}`)
           .then((response) => {
             console.log('spreads response', response);
@@ -43,7 +44,7 @@ export default class SpreadsList extends Component {
   }
 
   placeBet(betObj) {
-    const { teamId } = this.props.match?.params || {};
+    const { teamId } = this.props.match?.params || this.props || {};
     const { id } = this.state.spreadsData;
 
     // Get betObj with bet data and add our team id and id for all spreads
