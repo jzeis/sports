@@ -1,1 +1,1 @@
-export const removeGamesAfterStart = true;
+export const removeGamesAfterStart = false;

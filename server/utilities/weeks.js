@@ -1,4 +1,4 @@
-import { addDays, isSameDay, isAfter, isBefore } from 'date-fns';
+import { addDays, isAfter, isBefore, isSameDay } from 'date-fns';
 
 // First date of the season
 const firstDate = new Date('9/7/2021');
@@ -26,5 +26,5 @@ export const getWeekNumber = (selectedDate) => {
                 && (isSameDay(currentDate, weeksObj[week].endDate) || isBefore(currentDate, weeksObj[week].endDate));
     })
 
-    return currentWeek;
+    return currentWeek || 14;
 }

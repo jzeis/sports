@@ -36,7 +36,9 @@ mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: tr
 
 mongoose.set('useFindAndModify', false);
 
-scheduleSpreads();
+if (false) {
+  scheduleSpreads();
+}
 
 getScores().then(scores => {
   saveSpreads(JSON.stringify(scores));

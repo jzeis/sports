@@ -11,11 +11,11 @@ const weeks = weeksObj;
 export const getSpreads = async (req, res) => { 
     try {
         const {week: selectedWeek} = req.params || getWeekNumber();
-        const name = req.params.week ? `week${selectedWeek}-spreads` : 'latestSpreads'
+        const name = req.params.week ? `week${15}-spreads` : 'latestSpreads';
+        console.log('getting spreads for week', name)
         Spreads.findOne({name: name})
             .then(data => {
                 let spreadList = JSON.parse(data.spreads);
-
                 if (removeGamesAfterStart) {
                     const startDate = new Date(weeks[selectedWeek].startDate);
                     const endDate = new Date(weeks[selectedWeek].endDate);

@@ -80,7 +80,7 @@ router.get('/', auth, (req, res) => {
         // Query leagues where _id is in leagueIds array
         League.find({ _id : { $in : leagueIds } })
           .then(leagues => {
-            if (!leagues || !leagues.length) { throw new Error('No league found') }            
+            // if (!leagues || !leagues.length) { throw new Error('No league found') }            
             res.json(leagues);
           })
           .catch(err => { throw new Error('Error finding league')});
