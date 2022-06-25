@@ -47,7 +47,9 @@ function a11yProps(index) {
 }
 
 export default function BasicTabs(props) {
-  const { leagueId, teamId } = useParams();
+  const { leagueId, teamId } = props.match.params;
+
+  console.log('params', useParams(), props);
 
   const [tabIndex, setValue] = useState(0);
   const test = useSelector((state) => state);
@@ -60,10 +62,13 @@ export default function BasicTabs(props) {
   useEffect(() => {
     dispatch(getLeague(leagueId));
     dispatch(getLeagueBets(leagueId));
-    dispatch(getTeam(teamId));
     dispatch(getAllTeamsInLeague(leagueId));
+  }, [leagueId]);
+
+  useEffect(() => {
+    dispatch(getTeam(teamId));
     dispatch(getTeamBets(teamId));
-  }, []);
+  }, [teamId]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -82,10 +87,10 @@ export default function BasicTabs(props) {
         <LeagueBets bets={bets.allBets} teams={teams.allTeams} league={leagues.selectedLeague} {...useParams()} />
       </TabPanel>
       <TabPanel value={tabIndex} index={1}>
-        <Team league={leagues.selectedLeague} team={teams.selectedTeam} bets={bets.teamBets} scores={scores} />
+        <Team league={leagues.selectedLeague} team={teams.selectedTeam} bets={bets.teamBets} scores={scores} {...useParams()} />
       </TabPanel>
       <TabPanel value={tabIndex} index={2}>
-        <SpreadsList {...useParams()} />
+        <SpreadsList league={leagues.selectedLeague} team={teams.selectedTeam} {...useParams()} />
       </TabPanel>
     </Box>
   );

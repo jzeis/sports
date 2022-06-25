@@ -14,10 +14,13 @@ export const SET_SELECTED_LEAGUE = 'SET_SELECTED_LEAGUE';
 
 export const SET_SELECTED_TEAM = 'SET_SELECTED_TEAM';
 export const SET_ALL_TEAMS = 'SET_ALL_TEAMS';
+export const SUBTRACT_BALANCE = 'SUBTRACT_BALANCE';
 
 export const GET_LEAGUE_BETS = 'GET_LEAGUE_BETS';
 export const SET_TEAM_BETS = 'SET_TEAM_BETS';
 export const ADD_BET = 'ADD_BET';
 
 export const SET_SCORES = 'SET_SCORES';
+
+export const SET_SPREADS = 'SET_SPREADS';
 

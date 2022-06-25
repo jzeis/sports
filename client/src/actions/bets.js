@@ -1,5 +1,5 @@
 import * as betsApi from '../api/bets';
-import { GET_LEAGUE_BETS, SET_TEAM_BETS } from '../constants/actionTypes';
+import { ADD_BET, GET_LEAGUE_BETS, SET_TEAM_BETS, SUBTRACT_BALANCE } from '../constants/actionTypes';
 
 export const getLeagueBets = (leagueId) => async (dispatch) => {
   try {
@@ -22,6 +22,17 @@ export const getTeamBets = (teamId, weekNum) => async (dispatch) => {
 
       dispatch({ type: SET_TEAM_BETS, payload });
     }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const addBet = (betObj) => async (dispatch) => {
+  try {
+    const bet = await betsApi.addBet(betObj);
+
+    dispatch({ type: ADD_BET, payload: bet.data });
+    dispatch({ type: SUBTRACT_BALANCE, payload: bet.data.amount });
   } catch (error) {
     console.log(error);
   }

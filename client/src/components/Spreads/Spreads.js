@@ -1,77 +1,47 @@
-import axios from 'axios';
-import React, { Component } from 'react';
-import { API } from '../../api/index.js';
+import { addBet } from 'actions/bets.js';
+import { getSpreads } from 'actions/spreads.js';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import GameRow from './GameRow';
 
-export default class SpreadsList extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      league: {},
-      team: {},
-      spreadsData: {
-        spreads: [],
-        id: '',
-      },
-    };
+export default function SpreadsList(props) {
+  const spreadsData = useSelector((state) => state.spreads);
+  const dispatch = useDispatch();
+  const { league, team } = props;
 
-    this.placeBet = this.placeBet.bind(this);
-  }
+  useEffect(() => {
+    if (league) { dispatch(getSpreads(props.league.currentWeek)); }
+  }, [league?.currentWeek]);
 
-  componentDidMount() {
-    const { leagueId, teamId } = this.props.match?.params || this.props || {};
-
-    axios.all([API.get(`/league/${leagueId}`), API.get(`/team/${teamId}`), API.get(`/bet/${teamId}`)])
-      .then(([league, team, bets]) => {
-        this.setState({ league: league.data, team: team.data, bets: bets.data });
-
-        league.data.currentWeek = 15;
-        API.get(`/spreads/${league.data.currentWeek}`)
-          .then((response) => {
-            console.log('spreads response', response);
-            this.setState({ spreadsData: response.data });
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      })
-      .catch((error) => console.log(error));
-  }
-
-  spreadsList() {
-    const { team, spreadsData } = this.state;
-    return spreadsData.spreads.map((currentGame) => <GameRow game={currentGame} maxBet={team.balance} key={currentGame.id} placeBetFunc={this.placeBet} />);
-  }
-
-  placeBet(betObj) {
-    const { teamId } = this.props.match?.params || this.props || {};
-    const { id } = this.state.spreadsData;
+  const placeBet = (betObj) => {
+    const { id } = spreadsData;
 
     // Get betObj with bet data and add our team id and id for all spreads
     const bet = {
       ...betObj,
-      teamId,
+      teamId: team._id,
       id,
     };
 
-    API.post('/bet/add', bet)
-      .then(({ data: addedBet }) => {
-        const { bets, team } = this.state;
-        this.setState({ bets: bets.push(bet), team: { ...team, balance: team.balance - addedBet.amount } });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+    dispatch(addBet(bet));
 
-  render() {
-    const { league, team } = this.state;
-    return (
-      <div className="container container-bg">
-        <h2>Week {league.currentWeek} Odds</h2>
-        <p>Account Balance: {team.balance}</p>
-        {this.spreadsList()}
-      </div>
-    );
-  }
+    // API.post('/bet/add', bet)
+    //   .then(({ data: addedBet }) => {
+    //     // const { bets, team } = this.state;
+    //     this.setState({ bets: bets.push(bet), team: { ...team, balance: team.balance - addedBet.amount } });
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+  };
+
+  const spreadsList = () => spreadsData.spreads.map((currentGame) => <GameRow game={currentGame} maxBet={team.balance} key={currentGame.id} placeBetFunc={placeBet} />);
+
+  return (
+    <div className="container container-bg">
+      <h2>Week {league?.currentWeek} Odds</h2>
+      <p>Account Balance: {team.balance}</p>
+      {spreadsList()}
+    </div>
+  );
 }
