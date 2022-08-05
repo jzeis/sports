@@ -9,12 +9,12 @@ const leagueSchema = new Schema({
   teams: { type: [String], required: false },
   maxTeams: { type: Number, required: false },
   startingBalance: { type: Number, required: true },
-  startWeek: { type: String, required: true },
+  startWeek: { type: Number, required: true },
   startDate: { type: Date, required: true },
-  endWeek: { type: String, required: true },
+  endWeek: { type: Number, required: true },
   endDate: { type: Date, required: true },
   currentWeek: { type: String, required: false }  
- }, {
+}, {
   timestamps: true,
 });
 

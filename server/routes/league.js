@@ -4,72 +4,73 @@ import auth from '../middleware/auth.js';
 import League from '../models/league.js';
 import Team from '../models/team.js';
 import User from '../models/user.js';
-import { getWeekNumber, weeksObj } from '../utilities/weeks.js';
+import { getWeekNumber } from '../utilities/weeks.js';
 const router = express.Router();
 
 router.post('/add', auth, (req, res) => {
   if (!req.userId) {
-    return res.json({ message: "Unauthenticated" });
+    return res.json({ message: 'Unauthenticated' });
   }
 
   User.findOne({_id: req.userId})
-      .then(user => {
+    .then(user => {
         
-        const newLeague = new League({
-          commishionerId: req.userId,
-          leagueName: req.body.leagueName,
-          password: req.body.password,
-          teams: [],
-          maxTeams: req.body.maxTeams,
-          startingBalance: req.body.startingBalance,
-          startWeek: req.body.startWeek,
-          startDate: weeksObj[req.body.startWeek].startDate,
-          endWeek: req.body.endWeek,
-          endDate: weeksObj[req.body.endWeek].endDate,
-        }); 
+      const newLeague = new League({
+        commishionerId: req.userId,
+        leagueName: req.body.leagueName,
+        password: req.body.password,
+        teams: [],
+        maxTeams: req.body.maxTeams,
+        startingBalance: req.body.startingBalance,
+        startWeek: req.body.startWeek,
+        // startDate: weeksObj[req.body.startWeek].startDate,
+        endWeek: req.body.endWeek,
+        // endDate: weeksObj[req.body.endWeek].endDate,
+      }); 
 
-        const newTeam = new Team({
-          ownerId: req.userId,
-          teamName: user.name,
-          leagueId: newLeague._id,
-          balance: newLeague.startingBalance,
-          weekStartBalance: newLeague.startingBalance,
-        }); 
+      const newTeam = new Team({
+        ownerId: req.userId,
+        teamName: user.name,
+        leagueId: newLeague._id,
+        balance: newLeague.startingBalance,
+        weekStartBalance: newLeague.startingBalance,
+      }); 
 
-        newLeague.teams.push(newTeam._id);
-        const leaguePromise = new Promise((resolve, reject) => {
-          newLeague.save()
-            .then(resolve)
-        });
+      newLeague.teams.push(newTeam._id);
+      const leaguePromise = new Promise((resolve, reject) => {
+        newLeague.save()
+          .then(resolve);
+      });
 
-        const teamPromise = new Promise((resolve, reject) => {
-          newTeam.save()
-            .then(resolve)
-        });
-        Promise.all([leaguePromise, teamPromise])
-          .then(() => res.json('League added!'))
-          .catch(err => res.status(400).json('Error: ' + err));
-      })    
+      const teamPromise = new Promise((resolve, reject) => {
+        newTeam.save()
+          .then(resolve);
+      });
+      Promise.all([leaguePromise, teamPromise])
+        .then(() => res.json('League added!'))
+        .catch(err => res.status(400).json('Error: ' + err));
+    });    
 });
 
 router.get('/:id', auth, (req, res) => {
   if (!req.userId) {
-    return res.json({ message: "Unauthenticated" });
+    return res.json({ message: 'Unauthenticated' });
   }
   
   League.findById(req.params.id)
-    .then(league => {
+    .then(async (league) => {
       if (!league) { return res.status(400).json('no league found'); }
 
-      league.currentWeek = getWeekNumber();
-      res.json(league)
+      league.currentWeek = await getWeekNumber();
+
+      res.json(league);
     })
     .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.get('/', auth, (req, res) => {
   if (!req.userId) {
-    return res.json({ message: "Unauthenticated" });
+    return res.json({ message: 'Unauthenticated' });
   }
 
   try {
@@ -83,11 +84,11 @@ router.get('/', auth, (req, res) => {
             // if (!leagues || !leagues.length) { throw new Error('No league found') }            
             res.json(leagues);
           })
-          .catch(err => { throw new Error('Error finding league')});
-    })
+          .catch(err => { throw new Error('Error finding league');});
+      });
   
   } catch (err) {
-    res.status(400).json('Error: ' + err)
+    res.status(400).json('Error: ' + err);
   }
 });
 

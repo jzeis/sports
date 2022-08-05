@@ -7,7 +7,7 @@ const spreadSchema = new Schema({
   spreads: { type: String, required: true },
   name: { type: String, required: true },
   id: { type: String, required: true}
- }, {
+}, {
   timestamps: true,
 });
 

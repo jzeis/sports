@@ -13,9 +13,10 @@ const betSchema = new Schema({
   gameWeek: { type: Number, required: true },
   result: { type: String, required: false},
   processed: { type: Boolean, required: false}
- }, {
+}, {
   timestamps: true,
 });
+
 
 const Bet = mongoose.model('Bet', betSchema);
 

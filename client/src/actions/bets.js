@@ -33,7 +33,9 @@ export const addBet = (betObj) => async (dispatch) => {
 
     dispatch({ type: ADD_BET, payload: bet.data });
     dispatch({ type: SUBTRACT_BALANCE, payload: bet.data.amount });
+    return true;
   } catch (error) {
     console.log(error);
+    return false;
   }
 };

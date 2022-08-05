@@ -46,7 +46,7 @@ export const BetRow = (props) => {
 
 export default class BetList extends Component {
   static processBets() {
-    API.put('/bet/processAll')
+    API.put('/bet/process/14')
       .then((res) => console.log('proccessed bets', res));
   }
 
@@ -74,7 +74,7 @@ export default class BetList extends Component {
   }
 
   getScores(week = 15) {
-    axios.get(`http://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?week=${week}`)
+    axios.get(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?week=${week}`)
       .then((res) => {
         this.setState({ scores: mapScores(res.data) });
         this.calculateBets();

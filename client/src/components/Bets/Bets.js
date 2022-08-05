@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography';
 import { getLeagueBets, getTeamBets } from 'actions/bets';
 import { getLeague } from 'actions/leagues';
 import { getAllTeamsInLeague, getTeam } from 'actions/teams';
+import Balance from 'components/Balance/Balance';
 import LeagueBets from 'components/League/LeagueBets';
 import SpreadsList from 'components/Spreads/Spreads';
 import Team from 'components/Team/Team';
@@ -49,8 +50,6 @@ function a11yProps(index) {
 export default function BasicTabs(props) {
   const { leagueId, teamId } = props.match.params;
 
-  console.log('params', useParams(), props);
-
   const [tabIndex, setValue] = useState(0);
   const test = useSelector((state) => state);
   console.log('redux state', test);
@@ -75,23 +74,26 @@ export default function BasicTabs(props) {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs TabIndicatorProps={{ style: { backgroundColor: '#ffff00' } }} value={tabIndex} onChange={handleChange} aria-label="basic tabs example">
-          <Tab label="League" {...a11yProps(0)} />
-          <Tab label="My Bets" {...a11yProps(1)} />
-          <Tab label="Spreads" {...a11yProps(2)} />
-        </Tabs>
+    <>
+      <Box sx={{ width: '100%' }}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs TabIndicatorProps={{ style: { backgroundColor: '#ffff00' } }} value={tabIndex} onChange={handleChange} aria-label="basic tabs example">
+            <Tab label="League" {...a11yProps(0)} />
+            <Tab label="My Bets" {...a11yProps(1)} />
+            <Tab label="Spreads" {...a11yProps(2)} />
+          </Tabs>
+        </Box>
+        <TabPanel value={tabIndex} index={0}>
+          <LeagueBets bets={bets.allBets} teams={teams.allTeams} league={leagues.selectedLeague} {...useParams()} />
+        </TabPanel>
+        <TabPanel value={tabIndex} index={1}>
+          <Team league={leagues.selectedLeague} team={teams.selectedTeam} bets={bets.teamBets} scores={scores} {...useParams()} />
+        </TabPanel>
+        <TabPanel value={tabIndex} index={2}>
+          <SpreadsList league={leagues.selectedLeague} team={teams.selectedTeam} {...useParams()} />
+        </TabPanel>
       </Box>
-      <TabPanel value={tabIndex} index={0}>
-        <LeagueBets bets={bets.allBets} teams={teams.allTeams} league={leagues.selectedLeague} {...useParams()} />
-      </TabPanel>
-      <TabPanel value={tabIndex} index={1}>
-        <Team league={leagues.selectedLeague} team={teams.selectedTeam} bets={bets.teamBets} scores={scores} {...useParams()} />
-      </TabPanel>
-      <TabPanel value={tabIndex} index={2}>
-        <SpreadsList league={leagues.selectedLeague} team={teams.selectedTeam} {...useParams()} />
-      </TabPanel>
-    </Box>
+      <Balance balance={teams.selectedTeam?.balance} activeBets={bets.teamBets?.[leagues.selectedLeague?.currentWeek]} />
+    </>
   );
 }

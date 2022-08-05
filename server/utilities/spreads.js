@@ -65,45 +65,45 @@ import { getWeekNumber } from './weeks.js';
 // }
 
 
-export const saveSpreads = (spreads) => {
-    console.log('attempting to save', typeof spreads);
-    const week = getWeekNumber();
-    const newSpreads = {
-        spreads: spreads,
-        name: `week${week}-spreads`,
-        id: new Date().getTime().toString()
-    };
+export const saveSpreads = async (spreads) => {
+	console.log('attempting to save', typeof spreads);
+	const week = await getWeekNumber();
+	const newSpreads = {
+		spreads: spreads,
+		name: `week${week}-spreads`,
+		id: new Date().getTime().toString()
+	};
 
-    const query = { name: newSpreads.name };
-    const update = { $set: newSpreads};
-    const options = { upsert: true };
-    Spreads.updateOne(query, update, options)
-        .then(() => console.log('saved'))
-        .catch(err => console.log('Error: ' + err));
-}
+	const query = { name: newSpreads.name };
+	const update = { $set: newSpreads};
+	const options = { upsert: true };
+	Spreads.updateOne(query, update, options)
+		.then(() => console.log('saved'))
+		.catch(err => console.log('Error: ' + err));
+};
 
 export const mapSpreadsObject = (spreads) => {
-    return spreads.map(spread => {
-        const selectedBookmakerKey = 'unibet';
-        const backupBookmakerKey = 'bovada';
-        const bookmakers = spread.bookmakers;
-        const selectedBookmaker = bookmakers.find(bookmaker => {
-            return bookmaker.key === selectedBookmakerKey;
-        });
-        if (!selectedBookmaker) {
-            console.log('no bookmaker', bookmakers); 
-        }
-        const spreadsObject = selectedBookmaker?.markets?.find(market => market.key === 'spreads')?.outcomes
-            .map(teamObj => ({name: teamObj.name, points: teamObj.point}));
+	return spreads.map(spread => {
+		const selectedBookmakerKey = 'unibet';
+		const backupBookmakerKey = 'bovada';
+		const bookmakers = spread.bookmakers;
+		const selectedBookmaker = bookmakers.find(bookmaker => {
+			return bookmaker.key === selectedBookmakerKey;
+		});
+		if (!selectedBookmaker) {
+			console.log('no bookmaker', bookmakers); 
+		}
+		const spreadsObject = selectedBookmaker?.markets?.find(market => market.key === 'spreads')?.outcomes
+			.map(teamObj => ({name: teamObj.name, points: teamObj.point}));
         
-        return {
-            away_team: spread.away_team,
-            commence_time: spread.commence_time,
-            home_team: spread.home_team,
-            id: spread.id,
-            sport_key: spread.sport_key,
-            sport_title: spread.sport_title,
-            spreads: spreadsObject
-        }
-    })
-}
+		return {
+			away_team: spread.away_team,
+			commence_time: spread.commence_time,
+			home_team: spread.home_team,
+			id: spread.id,
+			sport_key: spread.sport_key,
+			sport_title: spread.sport_title,
+			spreads: spreadsObject
+		};
+	});
+};

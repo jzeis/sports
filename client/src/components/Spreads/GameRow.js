@@ -28,7 +28,8 @@ const GameRow = (props) => {
   const overObj = { ...underObj, type: betTypes.over };
 
   const [teamBet, setTeamBet] = useState(null);
-  const [betAmount, setBetAmount] = useState();
+  const [betAmount, setBetAmount] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const styles = {
     containerStyles: {
@@ -78,14 +79,18 @@ const GameRow = (props) => {
     },
   };
 
+  const clearData = () => {
+    setTeamBet(null);
+    setBetAmount('');
+  };
+
   const placeBet = () => {
     const betObj = {
       ...teamBet,
-      points: parseInt(teamBet.points, 10),
       amount: betAmount,
       gameDate: game.date,
     };
-    placeBetFunc(betObj);
+    placeBetFunc(betObj, clearData);
   };
 
   return (
@@ -131,6 +136,7 @@ const GameRow = (props) => {
             decimalScale={0}
             thousandSeparator
             prefix="$"
+            value={betAmount}
             isAllowed={(value) => value.value <= maxBet}
             onValueChange={(value) => setBetAmount(value.value)}
           />
@@ -138,11 +144,6 @@ const GameRow = (props) => {
           <button className="button" type="button" disabled={!teamBet || !betAmount} onClick={() => placeBet()}>Place bet</button>
         </div>
       </div>
-      {/* <pre>
-        {JSON.stringify(underObj)}
-        {JSON.stringify(teamBet)}
-        {JSON.stringify(teamBet) === JSON.stringify(underObj) ? 'true' : 'false'}
-      </pre> */}
     </div>
   );
 };

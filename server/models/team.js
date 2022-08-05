@@ -8,8 +8,8 @@ const teamSchema = new Schema({
   leagueId: { type: String, required: true },
   balance: { type: Number, required: true },
   weekStartBalance: { type: Number, required: false },
-  weekEndBalance: { type: Number, required: false },
- }, {
+  weekChange: { type: Number, required: false },
+}, {
   timestamps: true,
 });
 

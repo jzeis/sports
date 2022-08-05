@@ -1,6 +1,7 @@
  
 import { isAfter } from 'date-fns';
 import express from 'express';
+import { processWeekBets } from '../controllers/bets.js';
 import { calculateBet, getScores } from '../controllers/scores.js';
 import auth from '../middleware/auth.js';
 import Bet from '../models/bet.js';
@@ -11,21 +12,21 @@ const router = express.Router();
 
 const saveBet = (bet, req, res) => {
   bet.save()
-  .then(() => {
-    // Subtract bet amount from team
-    Team.updateOne({_id: req.body.teamId, ownerId: req.userId},
-      {$inc: { balance: -Math.abs(bet.amount) }},
-      (err, result) => {
-        if (err) { console.log(err); res.send(err); return;}
-      })
-    res.json(bet)
-  })
-  .catch(err => res.status(400).json('Error: ' + err));
-}
+    .then(() => {
+      // Subtract bet amount from team
+      Team.updateOne({_id: req.body.teamId, ownerId: req.userId},
+        {$inc: { balance: -Math.abs(bet.amount) }},
+        (err, result) => {
+          if (err) { console.log(err); res.send(err); return;}
+        });
+      res.json(bet);
+    })
+    .catch(err => res.status(400).json('Error: ' + err));
+};
 
-router.post('/add', auth, (req, res) => {
+router.post('/add', auth, async (req, res) => {
   if (!req.userId) {
-    return res.json({ message: "Unauthenticated" });
+    return res.json({ message: 'Unauthenticated' });
   }
   const {teamId, team, points, gameDate, type} = req.body;
   const numAmount = parseInt(req.body.amount);
@@ -41,7 +42,7 @@ router.post('/add', auth, (req, res) => {
     points: points,
     type: type || 'points',
     amount: numAmount,
-    gameWeek: getWeekNumber(gameDate),
+    gameWeek: await getWeekNumber(),
     gameDate: new Date(gameDate),
     processed: false
   });
@@ -52,24 +53,24 @@ router.post('/add', auth, (req, res) => {
     }
 
     saveBet(newBet, req, res);
-  })
+  });
 });
 
-router.get('/:teamId/:week?', auth, (req, res) => {
+router.get('/:teamId/:week?', auth, async (req, res) => {
   if (!req.userId) {
-    return res.json({ message: "Unauthenticated" });
+    return res.json({ message: 'Unauthenticated' });
   }
-  const week = req.params.week || getWeekNumber()
+  const week = req.params.week || await getWeekNumber();
   Bet.find({userId: req.userId, teamId: req.params.teamId, gameWeek: week })
-  .then(bets => res.json(bets))
-  .catch(err => res.status(400).json('Error: ' + err));
+    .then(bets => res.json(bets))
+    .catch(err => res.status(400).json('Error: ' + err));
 });
 
-router.get('/league/:leagueId/week/:week?', auth, (req, res) => {
+router.get('/league/:leagueId/week/:week?', auth, async(req, res) => {
   if (!req.userId) {
-    return res.json({ message: "Unauthenticated" });
+    return res.json({ message: 'Unauthenticated' });
   }
-  const week = req.params.week || getWeekNumber();
+  const week = req.params.week || await getWeekNumber();
   //Todo - add check to make sure user owns team in league
   League.findById(req.params.leagueId)
     .then(league => {
@@ -79,18 +80,19 @@ router.get('/league/:leagueId/week/:week?', auth, (req, res) => {
           const filteredBets = bets.filter(bet => {
             // return true;
             return isAfter(currentTime, new Date(bet.gameDate));
-          })
+          });
           res.json(filteredBets);
         })
         .catch(err => res.status(400).json('Error: ' + err));
-    }) 
+    }); 
 });
+
+router.put('/process/:week', auth, processWeekBets);
 
 router.put('/processAll/:week?', auth, (req, res) => {
   const week = req.params.week || getWeekNumber();
   const promiseArray = [];
   getScores(week).then(scores => {
-
     Bet.find({processed: false, gameWeek: week}).then(betList => {
       betList.forEach(bet => {
         bet = calculateBet(bet, scores);
@@ -98,21 +100,21 @@ router.put('/processAll/:week?', auth, (req, res) => {
           bet.save((err, bet) => {
             if (err) { console.log(err); reject(err); }
             if (bet) {resolve(bet); }
-          })
-        })
+          });
+        });
         promiseArray.push(betPromise);
 
         let amountWon;
         switch(bet.result) {
-          case 'W':
-            amountWon = bet.amount * 2;
-            break;
-          case 'T':
-            amountWon = bet.amount;
-            break;
-          default:
-            amountWon = 0;
-            break;
+        case 'W':
+          amountWon = bet.amount * 2;
+          break;
+        case 'T':
+          amountWon = bet.amount;
+          break;
+        default:
+          amountWon = 0;
+          break;
         }
 
         if (bet.result === 'W' || bet.result === 'T') {
@@ -123,19 +125,19 @@ router.put('/processAll/:week?', auth, (req, res) => {
               (err, result) => {
                 if (err) { console.log(err); reject(err); }
                 if (result) {resolve(result); }
-              })
-          })
+              });
+          });
           promiseArray.push(teamPromise);
         }
-      })      
-    })
+      });      
+    });
     
     Promise.all(promiseArray)
-          .then(() => res.json('All bets processed'))
-          .catch(err => res.status(400).json('Error: ' + err));
-  })
+      .then(() => res.json('All bets processed'))
+      .catch(err => res.status(400).json('Error: ' + err));
+  });
   
-})
+});
 
 export default router;
 

@@ -3,6 +3,11 @@ module.exports = {
     browser: true,
     es6: true,
   },
+  'import/resolver': {
+    'node': {
+        'extensions': ['.js', '.ts', '.d.ts', '.tsx']
+    },
+  },
   extends: [
     'plugin:react/recommended',
     'airbnb',
