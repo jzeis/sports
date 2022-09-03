@@ -74,7 +74,7 @@ export default class BetList extends Component {
   }
 
   getScores(week = 15) {
-    axios.get(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?week=${week}`)
+    axios.get(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard`)
       .then((res) => {
         this.setState({ scores: mapScores(res.data) });
         this.calculateBets();

@@ -7,44 +7,41 @@ import { calculateBets } from 'utilities/betOperations.js';
 import * as scoresApi from '../../actions/scores';
 import { BetRow } from '../Bets/BetList.js';
 
-const Team = (props) => {
-  const { currentWeek } = props.league;
+const Team = ({bets, league, team, scores}) => {
+  const { currentWeek } = league;
 
   const [week, changeWeek] = useState(currentWeek);
   const [amountWon, updateAmountWon] = useState(0);
 
   const dispatch = useDispatch();
-  console.log('Team props', props);
+  console.log('Team props', team);
 
   const getScores = () => {
     dispatch(scoresApi.getScores(week));
   };
 
   const getBets = () => {
-    dispatch(getTeamBets(props.team._id, week));
+    dispatch(getTeamBets(team._id, week));
   };
 
   useEffect(() => {
     getScores();
-    if (!props.bets[week]) {
+    if (!bets[week]) {
       getBets();
     }
   }, [week]);
 
   const betList = () => {
-    const { bets } = props;
     return (bets[week] || []).map((currentBet) => <BetRow bet={currentBet} key={currentBet._id} />);
   };
 
   const calcBets = () => {
-    const { bets, scores } = props;
     const [newBets, amt] = calculateBets(bets[week], scores);
     updateAmountWon(amt);
     dispatch({ type: SET_TEAM_BETS, payload: { week, bets: newBets } });
   };
 
   const weeksSelect = () => {
-    const { league } = props;
     const weeks = [];
     for (let i = parseInt(league.startWeek, 10); i <= parseInt(league.endWeek, 10); i += 1) {
       weeks.push(<MenuItem key={i} value={i}>{i}</MenuItem>);
@@ -53,7 +50,6 @@ const Team = (props) => {
     return weeks;
   };
 
-  const { league, team } = props;
   return (
     <div className="container container-bg">
       <h1>{team.teamName}</h1>
@@ -69,17 +65,17 @@ const Team = (props) => {
           {weeksSelect()}
         </Select>
       </FormControl>
-      <p>Account Balance: {team.balance}</p>
       <p>Amount Won: {amountWon}</p>
 
       <div>
         <h2>Week {week} Bets</h2>
+        {!bets?.[week]?.length && <p>You havent placed any bets for week {week}</p>}
         <table className="bets-table">
           <tbody>
             {betList()}
           </tbody>
         </table>
-        <button type="button" onClick={calcBets}>Calculate bets</button>
+        {/* <button type="button" onClick={calcBets}>Calculate bets</button> */}
       </div>
     </div>
   );

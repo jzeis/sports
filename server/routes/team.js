@@ -7,14 +7,14 @@ const router = express.Router();
 
 router.post('/add', auth, (req, res) => {
   if (!req.userId) {
-    return res.json({ message: "Unauthenticated" });
+    return res.json({ message: 'Unauthenticated' });
   }
 
   try {
     League.findOne({_id: req.body.leagueId})
       .then(league => {
         if(!league) {
-          throw new Error('no league found');
+          throw new Error('No league found');
         }
   
         if(req.body.password !== league.password) {
@@ -36,41 +36,45 @@ router.post('/add', auth, (req, res) => {
             league.save();
             res.json('Team added!');
           })
-          .catch(err => res.status(400).json('Error: ' + err));
-      })     
+          .catch(err => res.status(400).json(`${err}`));
+      })
+      .catch(err => {
+        console.log(err);
+        res.status(400).json(`${err}`);
+      });
       
   } catch (error) {
-      res.status(400).json('Error' + error);
+    res.status(400).json('Error' + error);
   }
 
 });
 
 router.get('/all', auth, (req, res) => {
   if (!req.userId) {
-    return res.json({ message: "Unauthenticated" });
+    return res.json({ message: 'Unauthenticated' });
   }
 
   Team.find({ownerId: req.userId})
-  .then(leagues => res.json(leagues))
-  .catch(err => res.status(400).json('Error: ' + err));
+    .then(leagues => res.json(leagues))
+    .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.get('/league/:leagueId', auth, (req, res) => {
   if (!req.userId) {
-    return res.json({ message: "Unauthenticated" });
+    return res.json({ message: 'Unauthenticated' });
   }
 
   Team.find({leagueId: req.params.leagueId})
-  .then(teams => {
-    const teamList = teams.map(({_id, teamName, weekStartBalance}) => ({_id, teamName, weekStartBalance}));
-    res.json(teamList);
-  })
-  .catch(err => res.status(400).json('Error: ' + err));
+    .then(teams => {
+      const teamList = teams.map(({_id, teamName, weekStartBalance}) => ({_id, teamName, weekStartBalance}));
+      res.json(teamList);
+    })
+    .catch(err => res.status(400).json('Error: ' + err));
 });
 
 router.get('/:id?', auth, (req, res) => {
   if (!req.userId) {
-    return res.json({ message: "Unauthenticated" });
+    return res.json({ message: 'Unauthenticated' });
   }
 
   Team.findById(req.params.id)

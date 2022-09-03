@@ -3,7 +3,7 @@ export const getSpread = (teamObj, spreadString = '') => {
     return 0;
   }
   const [teamAbbreviation, spread] = spreadString.split(' ');
-  const spreadNum = parseInt(spread, 10);
+  const spreadNum = parseFloat(spread);
   // If team matches, return spread
   if (teamAbbreviation === teamObj.abbreviation) {
     return spreadNum;
@@ -19,8 +19,6 @@ export const mapScores = (scores) => {
     date: event.date,
     odds: event.competitions[0].odds,
   })));
-
-  console.log('games', games);
 
   const gameData = games.map((game) => ({
     teams: game.map((team) => ({

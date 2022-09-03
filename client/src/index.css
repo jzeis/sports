@@ -34,6 +34,13 @@ body {
 	justify-content: center;
 	min-height: 50px;
 	max-width: 120px;
+	align-items: center;
+	justify-self: center;
+    width: 100%;
+}
+
+.bet-cell button {
+	width: 100%;
 }
 
 .team.bet-cell p {
@@ -89,6 +96,7 @@ body {
 	width: auto;
 	margin-bottom: 10px;
 	padding: 5px;
+	max-width: 100%;
 }
 
 .sr-only {
@@ -103,15 +111,15 @@ body {
 }
 
 /*----Tabs-----*/
-.MuiButtonBase-root {
+/* .MuiButtonBase-root {
 	color: #fff !important;
-}
+} */
 
-.MuiPaper-root {
+/* .MuiPaper-root {
 	color: rgba(0, 0, 0, 0.87);
 	transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 	background-color: #41464b !important;
-}
+} */
 
 .MuiFormLabel-root {
 	color: rgb(255 255 255 / 67%) !important;

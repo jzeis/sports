@@ -9,6 +9,9 @@ const teamSchema = new Schema({
   balance: { type: Number, required: true },
   weekStartBalance: { type: Number, required: false },
   weekChange: { type: Number, required: false },
+  win: { type: Number, required: false },
+  loss: { type: Number, required: false },
+  tie: { type: Number, required: false },
 }, {
   timestamps: true,
 });

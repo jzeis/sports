@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
-import { processWeekBets } from './controllers/bets.js';
+import { calculateRecords, processWeekBets } from './controllers/bets.js';
 import { generateSpreads } from './controllers/spreads.js';
 import { scheduleSpreads } from './jobs/cron-spreads.js';
 import betRouter from './routes/bet.js';
@@ -39,24 +39,17 @@ mongoose.connect(CONNECTION_URL, { useNewUrlParser: true, useUnifiedTopology: tr
 mongoose.set('useFindAndModify', false);
 
 if (false) {
-  scheduleSpreads();
+  generateSpreads(15);
+
+  calculateRecords();
+  
+
+  processWeekBets();  
 
   getScores().then(scores => {
     saveSpreads(JSON.stringify(scores));
   });
+  
 }
 
-processWeekBets();
-
-// Team.find().then(teams => {
-//   teams.forEach(team => {
-//     if (!team.weekStartBalance) {
-//       team.weekStartBalance = team.balance;
-//       team.save();
-//     }
-//   });
-
-// });
-
-generateSpreads(15);
-
+scheduleSpreads();

@@ -1,18 +1,20 @@
 import { Settings } from '@material-ui/icons';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import ListIcon from '@material-ui/icons/List';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
+import Link from '@mui/material/Link';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
 import decode from 'jwt-decode';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useHistory, useLocation } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import * as actionType from '../../constants/actionTypes';
 
 export default function AccountMenu() {
@@ -55,10 +57,9 @@ export default function AccountMenu() {
     <>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
 
-        <Typography component="div" sx={{ minWidth: 100 }}><Link to="/">Leagues</Link></Typography>
-        <Typography sx={{ minWidth: 100 }}>Profile</Typography>
+        {/* <Typography component="div" sx={{ minWidth: 100 }}><Link to="/">Leagues</Link></Typography> */}
         <Tooltip title="Account settings">
-          <IconButton onClick={handleClick} size="small" sx={{ ml: 2 }}>
+          <IconButton onClick={handleClick} size="small" >
             <Avatar sx={{ width: 32, height: 32 }}>{user?.result?.name?.charAt(0) || 'M' }</Avatar>
           </IconButton>
         </Tooltip>
@@ -68,6 +69,13 @@ export default function AccountMenu() {
         open={open}
         onClose={handleClose}
         onClick={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}  
+        transformOrigin={{vertical: 240, horizontal: 'center'}}
+        // anchorPosition={{ top: 60, left: 0 }}
+
         PaperProps={{
           elevation: 0,
           sx: {
@@ -80,29 +88,36 @@ export default function AccountMenu() {
               ml: -0.5,
               mr: 1,
             },
-            '&:before': {
-              content: '""',
-              display: 'block',
-              position: 'absolute',
-              top: 0,
-              right: 14,
-              width: 10,
-              height: 10,
-              bgcolor: 'background.paper',
-              transform: 'translateY(-50%) rotate(45deg)',
-              zIndex: 0,
-            },
+            // '&:before': {
+            //   content: '""',
+            //   display: 'block',
+            //   position: 'absolute',
+            //   top: 0,
+            //   right: 14,
+            //   width: 10,
+            //   height: 10,
+            //   bgcolor: 'background.paper',
+            //   transform: 'translateY(-50%) rotate(45deg)',
+            //   zIndex: 0,
+            // },
           },
         }}
-        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        // transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        // anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <MenuItem>
-          <Avatar /> Profile
+        <MenuItem 
+          component={Link}
+          href="/">
+          {/* <Link to="/">Leagues</Link> */}
+          
+          <ListItemIcon>
+            <ListIcon fontSize="small" />
+          </ListItemIcon>
+           Leagues
         </MenuItem>
-        <MenuItem>
+        {/* <MenuItem>
           <Avatar /> My account
-        </MenuItem>
+        </MenuItem> */}
         <Divider />
         <MenuItem>
           <ListItemIcon>
@@ -112,7 +127,7 @@ export default function AccountMenu() {
         </MenuItem>
         <MenuItem onClick={logout}>
           <ListItemIcon>
-            {/* <Logout fontSize="small" /> */}
+            <ExitToAppIcon fontSize="small" />
           </ListItemIcon>
           Logout
         </MenuItem>

@@ -1,7 +1,7 @@
 import React from 'react';
-import { connect, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Redirect, Route } from 'react-router-dom';
-import { GET_AUTH } from '../../constants/actionTypes';
+import { INIT_AUTH } from '../../constants/actionTypes';
 
 const AuthenticatedRoute = (props) => {
   const { location } = props;
@@ -9,8 +9,7 @@ const AuthenticatedRoute = (props) => {
   let profileData = useSelector((state) => state.auth?.authData);
 
   if (!profileData && localStorage.getItem('profile')) {
-    dispatch({ type: GET_AUTH });
-    // profileData = useSelector((state) => state.auth?.authData);
+    dispatch({ type: INIT_AUTH });
   }
 
   profileData = useSelector((state) => state.auth?.authData);
@@ -20,4 +19,4 @@ const AuthenticatedRoute = (props) => {
   );
 };
 
-export default connect()(AuthenticatedRoute);
+export default AuthenticatedRoute

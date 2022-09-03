@@ -5,15 +5,13 @@ const Schema = mongoose.Schema;
 const leagueSchema = new Schema({
   commishionerId: { type: String, required: true},
   leagueName: {type: String, required: true},
-  password: {type: String, required: false},
+  password: {type: String, required: true},
   teams: { type: [String], required: false },
   maxTeams: { type: Number, required: false },
   startingBalance: { type: Number, required: true },
   startWeek: { type: Number, required: true },
-  startDate: { type: Date, required: true },
   endWeek: { type: Number, required: true },
-  endDate: { type: Date, required: true },
-  currentWeek: { type: String, required: false }  
+  currentWeek: { type: Number, required: false }  
 }, {
   timestamps: true,
 });

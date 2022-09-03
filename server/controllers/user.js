@@ -46,3 +46,11 @@ export const signup = async (req, res) => {
     console.log(error);
   }
 };
+
+export const resetPassword = async (email, password) => {
+  const existingUser = await UserModel.findOne({ email });
+  const hashedPassword = await bcrypt.hash(password, 12);
+
+  existingUser.password = hashedPassword;
+  existingUser.save();
+};

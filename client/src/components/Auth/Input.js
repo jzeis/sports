@@ -3,12 +3,14 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import React from 'react';
 
-const Input = ({ name, handleChange, label, half, autoFocus, type, handleShowPassword }) => (
+const Input = ({ name, handleChange, label, half, autoFocus, type, handleShowPassword, error, helperText }) => (
   <Grid item xs={12} sm={half ? 6 : 12}>
     <TextField
+      error={error}
+      helperText={helperText}
       name={name}
       onChange={handleChange}
-      variant="outlined"
+      variant="standard"
       required
       fullWidth
       label={label}

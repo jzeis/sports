@@ -1,10 +1,11 @@
 import axios from 'axios';
+import { scoresApiUrl } from '../constants/config.constants.js';
 
 export const getScores = (week) => { 
   console.log('getting scores for week', week);
   return new Promise((resolve, reject) => {
     try {
-      axios.get(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?week=${week}`)
+      axios.get(scoresApiUrl(week))
         .then(res => {
           resolve(mapScores(res.data));
         });    

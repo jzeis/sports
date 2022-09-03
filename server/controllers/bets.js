@@ -3,15 +3,16 @@ import Bet from '../models/bet.js';
 import League from '../models/league.js';
 import Team from '../models/team.js';
 import { calculateBet, getScores } from '../utilities/scores.js';
+import { incrementWeekNumber } from '../utilities/weeks.js';
 
 
 const router = express.Router();
 
 export const processWeekBets = async (req, res) => { 
-  // const week = req.params.week;
-  const week = 14;
+  const week = req.params.week;
   const scores = await getScores(week);
   const scoreMap = createScoreMap(scores);
+  // console.log(scoreMap);
   const promiseList = [];
   // Get leagues active for given week
   const leagueList = await League.find(
@@ -25,31 +26,43 @@ export const processWeekBets = async (req, res) => {
     const teamList = await Team.find({leagueId: league._id});
     teamList.forEach(async team => {
       const betList = await Bet.find({teamId: team._id, gameWeek: week, processed: false});
-      let winnings = 0;
+      // let winnings = 0;
       betList.forEach(bet => {
         bet = calculateBet(bet, scoreMap);
-        if (bet.result === 'W' || bet.result === 'T' ) {
-          winnings += bet.result === 'W' ? bet.amount * 2 : bet.amount;
+        
+        switch(bet.result) {
+        case 'W':
+          team.win++;
+          team.balance += bet.amount * 2;
+          break;
+        case 'L':
+          team.loss++;
+          break;
+        case 'T':
+          team.tie++;
+          team.balance += bet.amount;
         }
+        
+        promiseList.push(bet.save());
       });
-      team.balance += winnings;
+      // team.balance += winnings;
       team.weekChange = team.balance - team.weekStartBalance;
       team.weekStartBalance = team.balance;
       promiseList.push(team.save());
-       
-      
     });
-    const result = await Promise.all(promiseList)
-      .then(() => true)
-      .catch(error => {
-        console.error(error.message);
-        return false;
-      });
-  
-    console.log('result', result, promiseList);
-    return result;
   });
 
+  const result = await Promise.all(promiseList)
+    .then(() => {
+      incrementWeekNumber();
+      return true;
+    })
+    .catch(error => {
+      console.error(error.message);
+      return false;
+    });
+
+  return result;
 };
 
 export const createScoreMap = (scores) => {
@@ -60,6 +73,48 @@ export const createScoreMap = (scores) => {
     });
   });
   return map;
+};
+
+export const calculateRecords = async (req, res) => { 
+  const promiseList = [];
+  // Get leagues active for given week
+  const leagueList = await League.find(); 
+
+  leagueList.forEach(async league => {
+    // Get list of teams within league
+    const teamList = await Team.find({leagueId: league._id});
+    teamList.forEach(async team => {
+      team.win = 0;
+      team.loss = 0;
+      team.tie = 0;
+      const betList = await Bet.find({teamId: team._id, processed: true});
+      betList.forEach(bet => {        
+        switch(bet.result) {
+        case 'W':
+          team.win++;
+          break;
+        case 'L':
+          team.loss++;
+          break;
+        case 'T':
+          team.tie++;
+        }
+        
+      });
+      promiseList.push(team.save());
+    });
+  });
+
+  const result = await Promise.all(promiseList)
+    .then(() => {
+      return true;
+    })
+    .catch(error => {
+      console.error(error.message);
+      return false;
+    });
+
+  return result;
 };
 
 

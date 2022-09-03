@@ -4,7 +4,10 @@ export const DELETE = 'DELETE';
 export const FETCH_ALL = 'FETCH_ALL';
 export const LIKE = 'LIKE';
 
-export const AUTH = 'AUTH';
+
+export const ATTEMPT_LOGIN = 'ATTEMPT_LOGIN';
+export const FAILED_LOGIN = 'FAILED_LOGIN';
+export const SET_AUTH_DATA = 'SET_AUTH_DATA';
 export const LOGOUT = 'LOGOUT';
 export const INIT_AUTH = 'INIT_AUTH';
 export const GET_AUTH = 'GET_AUTH';

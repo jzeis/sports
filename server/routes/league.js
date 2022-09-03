@@ -7,6 +7,16 @@ import User from '../models/user.js';
 import { getWeekNumber } from '../utilities/weeks.js';
 const router = express.Router();
 
+router.get('/currentWeek', auth, async (req, res) => {
+  try {
+    const weekNum = await getWeekNumber();
+    res.json(weekNum);
+  }
+  catch {
+    res.status(400).json('Error getting current week number');
+  }
+});
+
 router.post('/add', auth, (req, res) => {
   if (!req.userId) {
     return res.json({ message: 'Unauthenticated' });
@@ -34,6 +44,9 @@ router.post('/add', auth, (req, res) => {
         leagueId: newLeague._id,
         balance: newLeague.startingBalance,
         weekStartBalance: newLeague.startingBalance,
+        win: 0,
+        loss: 0,
+        tie: 0
       }); 
 
       newLeague.teams.push(newTeam._id);
@@ -91,6 +104,7 @@ router.get('/', auth, (req, res) => {
     res.status(400).json('Error: ' + err);
   }
 });
+
 
 export default router;
 

@@ -1,5 +1,6 @@
+import { addMinutes, isBefore } from 'date-fns';
 import express from 'express';
-import { removeGamesAfterStart } from '../constants/config.constants.js';
+import { minutesBeforeGameLock, removeGamesAfterStart } from '../constants/config.constants.js';
 import Spreads from '../models/spreads.js';
 import { getWeekNumber } from '../utilities/weeks.js';
 
@@ -10,27 +11,29 @@ const router = express.Router();
 export const getSpreads = async (req, res) => { 
   try {
     const {week: selectedWeek} = req.params || getWeekNumber();
-    const name = req.params.week ? `week${selectedWeek}-spreads` : 'latestSpreads';
+    const name = `week${selectedWeek}-spreads`;
     console.log('getting spreads for week', name);
     Spreads.findOne({name: name})
       .then(data => {
         let spreadList = JSON.parse(data.spreads);
         if (removeGamesAfterStart) {
-          // const startDate = new Date(weeks[selectedWeek].startDate);
-          // const endDate = new Date(weeks[selectedWeek].endDate);
-          // const currentTime = new Date();
+          const currentTime = addMinutes(new Date(), minutesBeforeGameLock);
                     
           // Filter out games that have started
-          // spreadList = spreadList.filter(game => {
-          //     const gameDate = new Date(game.date);
-          //     return (isSameDay(gameDate, startDate) || isAfter(gameDate, startDate))
-          //         && (isSameDay(gameDate, endDate) || isBefore(gameDate, endDate)
-          //         && isBefore(currentTime, gameDate));
-          // })
+          spreadList = spreadList.filter(game => {
+            const gameDate = new Date(game.date);
+            
+            return (
+            // isSameDay(gameDate, startDate) || isAfter(gameDate, startDate))
+            //   && (isSameDay(gameDate, endDate) || isBefore(gameDate, endDate)
+              
+              isBefore(currentTime, gameDate));
+          });
         }
         const returnObj = {
           spreads: spreadList,
-          id: data.id
+          id: data.id,
+          updatedAt: data.updatedAt
         };
 
         res.json(returnObj);

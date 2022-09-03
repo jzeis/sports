@@ -1,3 +1,4 @@
+import { makeStyles } from '@material-ui/core';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
@@ -26,7 +27,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box className="testing" sx={{ pt: 2 }}>
           <Typography component="div">{children}</Typography>
         </Box>
       )}
@@ -73,12 +74,36 @@ export default function BasicTabs(props) {
     setValue(newValue);
   };
 
+  const classes = makeStyles((theme) => ({
+    indicator: {
+      backgroundColor: "yellow",
+    },
+    tabRoot: {
+      "&:hover": {
+        color: "yellow",
+        opacity: 1
+      }
+    },
+    selectedTab: {
+      color: "yellow"
+    }
+   }));
+
   return (
     <>
-      <Box sx={{ width: '100%' }}>
+      <Box sx={{ width: '100%', my: '60px' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs TabIndicatorProps={{ style: { backgroundColor: '#ffff00' } }} value={tabIndex} onChange={handleChange} aria-label="basic tabs example">
-            <Tab label="League" {...a11yProps(0)} />
+          <Tabs 
+            textColor="inherit" 
+            TabIndicatorProps={{
+              style: { background: "yellow" }
+            }}
+            sx={{position: 'fixed', left: 0, top: 0, width: '100%', background: '#121212', zIndex: 1}}
+            value={tabIndex}  
+            variant="fullWidth"
+            onChange={handleChange} 
+            aria-label="Team tabs">
+            <Tab classes={{ root: classes.tabRoot, selected: classes.selectedTab }} label="League" {...a11yProps(0)} />
             <Tab label="My Bets" {...a11yProps(1)} />
             <Tab label="Spreads" {...a11yProps(2)} />
           </Tabs>

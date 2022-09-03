@@ -1,13 +1,14 @@
 import axios from 'axios';
+import { scoresApiUrl } from '../constants/config.constants.js';
 import { default as Scores } from '../models/scores.js';
 import { getWeekNumber } from './weeks.js';
 
 export const getScores = async (week) => { 
+  const weekNum = await getWeekNumber();
   console.log('getting scores for week', week);
-  const weekNum = week || await getWeekNumber();
   return new Promise((resolve, reject) => {
     try {
-      axios.get(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?week=${weekNum}`)
+      axios.get(scoresApiUrl(weekNum))
         .then(res => {
           resolve(mapScores(res.data));
         });    
@@ -22,7 +23,7 @@ export const getSpread = (teamObj, spreadString = '') => {
     return 0;
   }
   const [teamAbbreviation, spread] = spreadString.split(' ');
-  const spreadNum = parseInt(spread, 10);
+  const spreadNum = parseFloat(spread);
   // If team matches, return spread
   if (teamAbbreviation === teamObj.abbreviation) {
     return spreadNum;
@@ -48,6 +49,7 @@ export const mapScores = (scores) => {
       opposingTeam: game[i === 0 ? 1 : 0].team.abbreviation,
       displayName: team.team.displayName,
       abbreviation: team.team.abbreviation,
+      logo: team.team.logo,
       score: team.score,
       name: team.team.name,
       id: team.id,
@@ -72,9 +74,9 @@ export const calculateBet = (bet, scoreMap) => {
 
   const teamName = bet.team.split('/')[0] || '';
   const betOnTeam = scoreMap[teamName];
-        
   if (betOnTeam?.status.description === 'Final') {
     const opposingTeam = scoreMap[betOnTeam.opposingTeam];
+
     switch(bet.type) {
     case 'points':
       if (+betOnTeam.score + +bet.points === +opposingTeam.score) {

@@ -5,9 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "deploy-production": "scp -r ./* root@206.189.253.143:/sports/server",
-    "start": "nodemon index.js",
-    "start:prod": "NODE_ENV=production pm2 start index.js"
+    "deploy-production": "scp -r ./** root@206.189.253.143:/sports/server",
+    "deploy-index": "scp -r ./index.js root@206.189.253.143:/sports/server",
+    "start": "cross-env NODE_ENV=dev nodemon index.js",
+    "start:prod": "cross-env NODE_ENV=production && pm2 start index.js"
   },
   "engines": {
     "node": "14.17.6"

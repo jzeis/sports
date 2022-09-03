@@ -11,7 +11,7 @@ export default function SpreadsList(props) {
   const { league, team } = props;
 
   useEffect(() => {
-    if (league) { dispatch(getSpreads(props.league.currentWeek)); }
+    if (league && league.currentWeek <= league.endWeek) { dispatch(getSpreads(props.league.currentWeek)); }
   }, [league?.currentWeek]);
 
   const placeBet = async (betObj, cb = () => null) => {
@@ -35,9 +35,10 @@ export default function SpreadsList(props) {
   return (
     <div className="container container-bg">
       <h2>Week {league?.currentWeek} Odds</h2>
-      <p>Account Balance: {team.balance}</p>
-      <p>Loading: {loading ? 'true' : 'false'}</p>
-      {spreadsList()}
+      {league && league.currentWeek <= league.endWeek ?
+        spreadsList()
+        : <p>Spreads are not available for leagues that have ended</p>
+      }
     </div>
   );
 }
