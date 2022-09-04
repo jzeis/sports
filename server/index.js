@@ -2,10 +2,10 @@
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
-import { scheduleSpreads } from 'jobs/cron-spreads.js';
 import mongoose from 'mongoose';
 import { calculateRecords, processWeekBets } from './controllers/bets.js';
 import { generateSpreads } from './controllers/spreads.js';
+import { scheduleSpreads } from './jobs/cron-spreads.js';
 import betRouter from './routes/bet.js';
 import leagueRouter from './routes/league.js';
 import postRoutes from './routes/posts.js';
