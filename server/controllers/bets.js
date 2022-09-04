@@ -33,7 +33,7 @@ export const processWeekBets = async (req, res) => {
         switch(bet.result) {
         case 'W':
           team.win++;
-          team.balance += bet.amount * 2;
+          team.balance += (bet.amount * 2);
           break;
         case 'L':
           team.loss++;
@@ -63,6 +63,11 @@ export const processWeekBets = async (req, res) => {
     });
 
   return result;
+};
+
+export const deleteBets = async (week) => {
+  const betList = await Bet.find({gameWeek: week});
+  betList.forEach(bet => bet.delete());
 };
 
 export const createScoreMap = (scores) => {

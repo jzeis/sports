@@ -1,4 +1,4 @@
-import { Button, FormControl, InputLabel, MenuItem, Paper, Select, TextField } from '@material-ui/core';
+import { Button, FormControl, InputLabel, MenuItem, Paper, Select, TextField } from '@mui/material';
 import { getCurrentWeek } from 'api/leagues.js';
 import React, { Component } from 'react';
 import { API } from '../../api/index.js';

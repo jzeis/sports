@@ -1,11 +1,11 @@
-import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { FormControl, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableContainer } from '@mui/material';
 import { getTeamBets } from 'actions/bets.js';
+import BetRow from 'components/Bets/BetRow';
 import { SET_TEAM_BETS } from 'constants/actionTypes';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { calculateBets } from 'utilities/betOperations.js';
 import * as scoresApi from '../../actions/scores';
-import { BetRow } from '../Bets/BetList.js';
 
 const Team = ({bets, league, team, scores}) => {
   const { currentWeek } = league;
@@ -53,7 +53,7 @@ const Team = ({bets, league, team, scores}) => {
   return (
     <div className="container container-bg">
       <h1>{team.teamName}</h1>
-      <FormControl>
+      <FormControl variant='standard'>
         <InputLabel id="week-selector">Week</InputLabel>
         <Select
           labelId="week-selector"
@@ -70,11 +70,15 @@ const Team = ({bets, league, team, scores}) => {
       <div>
         <h2>Week {week} Bets</h2>
         {!bets?.[week]?.length && <p>You havent placed any bets for week {week}</p>}
-        <table className="bets-table">
-          <tbody>
+        <TableContainer sx={{marginBottom: '20px'}} component={Paper}>
+        <Table size="small" aria-label="standings">
+          
+          <TableBody>
             {betList()}
-          </tbody>
-        </table>
+          </TableBody>
+        </Table>
+      </TableContainer>
+
         {/* <button type="button" onClick={calcBets}>Calculate bets</button> */}
       </div>
     </div>

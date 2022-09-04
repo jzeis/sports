@@ -55,6 +55,7 @@ router.post('/add', auth, async (req, res) => {
   });
 });
 
+// Check this out - might not be used
 router.get('/:teamId/:week?', auth, async (req, res) => {
   if (!req.userId) {
     return res.json({ message: 'Unauthenticated' });
@@ -80,7 +81,6 @@ router.get('/league/:leagueId/week/:week?', auth, async(req, res) => {
         .then(bets => {
           const currentTime = new Date();
           const filteredBets = bets.filter(bet => {
-            // return true;
             return isAfter(currentTime, new Date(bet.gameDate));
           });
           res.json(filteredBets);

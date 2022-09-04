@@ -1,5 +1,5 @@
-import { Button } from '@material-ui/core';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { Button } from '@mui/material';
 import { getLeaguesAndTeams } from 'actions/leagues';
 import React, { Component } from 'react';
 import CurrencyFormat from 'react-currency-format';
@@ -25,7 +25,10 @@ class TeamsList extends Component {
       padding: '5px 10px',
       display: 'flex',
       flexDirection: 'row',
-      flexWrap: 'nowrap'
+      flexWrap: 'nowrap',
+      margin: '20px 0',
+      borderRadius: 5,
+      background: '#121212'
     };
 
     return (
@@ -39,7 +42,7 @@ class TeamsList extends Component {
               <p>Balance: <CurrencyFormat value={league.team.balance} displayType={'text'} thousandSeparator={true} prefix={'$'} /></p>
             </div>
             <div style={{flex: '0 0 25%', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-              <ArrowForwardIcon color="primary"/>
+              <ArrowForwardIosIcon color="primary"/>
             </div>
           </Link>
         ))}

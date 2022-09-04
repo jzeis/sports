@@ -1,48 +1,10 @@
 import { API } from 'api';
 import axios from 'axios';
 import React, { Component } from 'react';
-import { calculateBets, formatBetType, formatGameTime } from 'utilities/betOperations';
+import { calculateBets } from 'utilities/betOperations';
 import { mapScores } from 'utilities/mapScores';
+import BetRow from './BetRow';
 
-export const BetRow = (props) => {
-  const { bet } = props;
-
-  const styles = {
-    spreadHeader: {
-      gridArea: 'spreadHeader',
-    },
-    gridLabel: {
-      gridArea: 'label',
-    },
-    gridTeam: {
-      gridArea: 'team',
-    },
-    gridSpread: {
-      gridArea: 'spread',
-    },
-    gridAmount: {
-      gridArea: 'amount',
-    },
-    gridDate: {
-      gridArea: 'date',
-    },
-    gridResult: {
-      gridArea: 'result',
-    },
-  };
-
-  return (
-    <tr>
-      <td style={styles.gridTeam}>{bet.team}</td>
-      <td style={styles.gridSpread}>{formatBetType(bet)}</td>
-      <td style={styles.gridAmount}>${bet.amount}</td>
-      <td style={styles.gridDate}>{formatGameTime(bet.gameDate)}</td>
-      <td style={styles.gridResult}>{bet.result}</td>
-      {bet.teamName
-          && <td>{bet.teamName}</td>}
-    </tr>
-  );
-};
 
 export default class BetList extends Component {
   static processBets() {

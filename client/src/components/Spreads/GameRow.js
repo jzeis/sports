@@ -1,6 +1,6 @@
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { betTypes } from 'constants/betTypes.constants';
-import React, { useState } from 'react';
+import { default as React, useState } from 'react';
 import CurrencyFormat from 'react-currency-format';
 
 const GameRow = (props) => {
@@ -145,7 +145,7 @@ const GameRow = (props) => {
             onValueChange={(value) => setBetAmount(value.value)}
           />
           <label htmlFor={`${game.id}-amount`} className="sr-only">Bet amount</label>
-          <Button variant='contained' color="primary" disabled={!teamBet || !betAmount} onClick={() => placeBet()}>Place bet</Button>
+          <Button sx={{textTransform: 'none'}} variant='contained' color="primary" disabled={!teamBet || !betAmount} onClick={() => placeBet()}>Place Bet</Button>
         </div>
       </div>
     </div>

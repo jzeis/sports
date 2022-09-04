@@ -1,5 +1,5 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
-import { BetRow } from 'components/Bets/BetList.js';
+import BetRow from 'components/Bets/BetRow';
 import React from 'react';
 import CurrencyFormat from 'react-currency-format';
 
@@ -33,25 +33,24 @@ const LeagueBets = ({bets, league, teams}) => {
 
   return (
     <div className="container container-bg">
-      {league?.leagueName && <h2>{league.leagueName}</h2>}
-      <p>Weeks {league?.startWeek} - {league?.endWeek}</p>
+      {league?.leagueName && <h2>{league.leagueName} <span style={{fontSize: '.8rem', color: '#dad4d4', fontStyle: 'italic'}}>(Weeks {league?.startWeek} - {league?.endWeek})</span></h2>}
       <h3>Standings</h3>
-      <TableContainer component={Paper}>
-      <Table size="small" aria-label="standings">
-        <TableHead>
-          <TableRow>
-          <TableCell align="center">Rank</TableCell>
-          <TableCell align="center">Team</TableCell>
-            <TableCell align="center">Balance</TableCell>
-            <TableCell align="center">Record</TableCell>
-            <TableCell align="center">Change</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-         {standings()}
-        </TableBody>
-      </Table>
-    </TableContainer>
+      <TableContainer sx={{marginBottom: '20px'}} component={Paper}>
+        <Table size="small" aria-label="standings">
+          <TableHead>
+            <TableRow>
+            <TableCell align="center">Rank</TableCell>
+            <TableCell align="center">Team</TableCell>
+              <TableCell align="center">Balance</TableCell>
+              <TableCell align="center">Record</TableCell>
+              <TableCell align="center">Change</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+          {standings()}
+          </TableBody>
+        </Table>
+      </TableContainer>
       
       <h2>Week {league?.currentWeek} Bets</h2>
       {!bets.length && 

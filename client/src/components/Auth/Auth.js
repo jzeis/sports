@@ -1,7 +1,6 @@
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import LockIcon from '@mui/icons-material/Lock';
 import { Button, Container, Grid, Paper, Typography } from '@mui/material';
 import React, { useState } from 'react';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { signin, signup } from '../../actions/auth';
@@ -44,7 +43,7 @@ const SignUp = () => {
     <Container component="main" maxWidth="xs">
       <Paper color="primary" className={classes.paper} elevation={3}>
         {/* <Avatar className={classes.avatar}> */}
-          <LockOutlinedIcon fontSize="large" color="primary"/>
+          <LockIcon fontSize="large" color="primary"/>
         {/* </Avatar> */}
         <Typography component="h1" variant="h5">{ isSignup ? 'Sign up' : 'Sign in' }</Typography>
         <form className={classes.form} onSubmit={handleSubmit}>
