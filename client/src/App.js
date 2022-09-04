@@ -1,4 +1,4 @@
-import { Container, createMuiTheme, ThemeProvider } from "@material-ui/core";
+import { Container, createTheme, ThemeProvider } from "@mui/material";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
@@ -22,7 +22,7 @@ export const overrides = {
 }
 export const themeOptions = {
   palette: {
-    type: 'dark',
+    mode: 'dark',
     primary: {
       main: '#FDEE30',
     },
@@ -32,9 +32,8 @@ export const themeOptions = {
   },
 };
 
-const appTheme = createMuiTheme({
+const appTheme = createTheme({
 	palette: themeOptions.palette,
-	overrides 
 });
 
 const App = () => (
