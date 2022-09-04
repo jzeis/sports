@@ -66,7 +66,7 @@ router.get('/league/:leagueId', auth, (req, res) => {
 
   Team.find({leagueId: req.params.leagueId})
     .then(teams => {
-      const teamList = teams.map(({_id, teamName, weekStartBalance}) => ({_id, teamName, weekStartBalance}));
+      const teamList = teams.map(({_id, teamName, weekStartBalance, win, loss, tie, weekChange = 0}) => ({_id, teamName, weekStartBalance, win, loss, tie, weekChange}));
       res.json(teamList);
     })
     .catch(err => res.status(400).json('Error: ' + err));

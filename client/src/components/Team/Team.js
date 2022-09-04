@@ -65,7 +65,7 @@ const Team = ({bets, league, team, scores}) => {
           {weeksSelect()}
         </Select>
       </FormControl>
-      <p>Amount Won: {amountWon}</p>
+      {/* <p>Amount Won: {amountWon}</p> */}
 
       <div>
         <h2>Week {week} Bets</h2>

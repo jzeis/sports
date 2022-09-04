@@ -1,14 +1,27 @@
+import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import { BetRow } from 'components/Bets/BetList.js';
 import React from 'react';
+import CurrencyFormat from 'react-currency-format';
 
 const LeagueBets = ({bets, league, teams}) => {
 
   const standings = () => {
     const sortedTeams = teams.sort((team1, team2) => team2.weekStartBalance - team1.weekStartBalance);
     return (
-      sortedTeams.map((team) => <p key={team._id}>{team.teamName} - {team.weekStartBalance}</p>)
+      sortedTeams.map((team, i) => {
+        return <TableRow
+              key={team._id}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+              <TableCell align="center">{i + 1}</TableCell>
+              <TableCell align="center">{team.teamName}</TableCell>
+              <TableCell align="center"><CurrencyFormat value={team.weekStartBalance} displayType={'text'} thousandSeparator={true} prefix={'$'}/></TableCell>
+              <TableCell align="center">{team.win}-{team.loss}-{team.tie}</TableCell>
+              <TableCell align="center">{team.weekChange}</TableCell>
+            </TableRow>
+      })
     );
-  };
+  }; 
 
   const betList = () => {
     const leagueBets = bets.map((bet) => ({
@@ -23,7 +36,23 @@ const LeagueBets = ({bets, league, teams}) => {
       {league?.leagueName && <h2>{league.leagueName}</h2>}
       <p>Weeks {league?.startWeek} - {league?.endWeek}</p>
       <h3>Standings</h3>
-      {standings()}
+      <TableContainer component={Paper}>
+      <Table size="small" aria-label="standings">
+        <TableHead>
+          <TableRow>
+          <TableCell align="center">Rank</TableCell>
+          <TableCell align="center">Team</TableCell>
+            <TableCell align="center">Balance</TableCell>
+            <TableCell align="center">Record</TableCell>
+            <TableCell align="center">Change</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+         {standings()}
+        </TableBody>
+      </Table>
+    </TableContainer>
+      
       <h2>Week {league?.currentWeek} Bets</h2>
       {!bets.length && 
         <>
