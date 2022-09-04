@@ -2,6 +2,7 @@
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import express from 'express';
+import { scheduleSpreads } from 'jobs/cron-spreads.js';
 import mongoose from 'mongoose';
 import { calculateRecords, processWeekBets } from './controllers/bets.js';
 import { generateSpreads } from './controllers/spreads.js';
@@ -55,4 +56,4 @@ if (false) {
 
 
 
-// scheduleSpreads();
+scheduleSpreads();
