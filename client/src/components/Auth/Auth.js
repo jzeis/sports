@@ -1,6 +1,7 @@
-import { Button, Container, Grid, Paper, Typography } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import { Button, Container, Grid, Paper, Typography } from '@mui/material';
 import React, { useState } from 'react';
+
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { signin, signup } from '../../actions/auth';
@@ -41,7 +42,7 @@ const SignUp = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Paper className={classes.paper} elevation={3}>
+      <Paper color="primary" className={classes.paper} elevation={3}>
         {/* <Avatar className={classes.avatar}> */}
           <LockOutlinedIcon fontSize="large" color="primary"/>
         {/* </Avatar> */}
@@ -61,9 +62,9 @@ const SignUp = () => {
           <Button type="submit" fullWidth variant="contained" color="primary" className={classes.submit}>
             { isSignup ? 'Sign Up' : 'Sign In' }
           </Button>
-          <Grid container justify="center">
+          <Grid container sx={{justifyContent: 'center'}}>
             <Grid item>
-              <Button onClick={switchMode}>
+              <Button sx={{textTransform: 'none'}} onClick={switchMode}>
                 { isSignup ? 'Already have an account? Sign in' : "Don't have an account? Sign Up" }
               </Button>
             </Grid>
