@@ -1,8 +1,8 @@
-import { makeStyles } from '@mui/material';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Typography from '@mui/material/Typography';
+import { makeStyles } from "@mui/styles";
 import { getLeagueBets, getTeamBets } from 'actions/bets';
 import { getLeague } from 'actions/leagues';
 import { getAllTeamsInLeague, getTeam } from 'actions/teams';

@@ -1,7 +1,10 @@
 import { Alert, AlertTitle, Button, Container, TextField } from '@mui/material';
 import { getLeague } from 'api/leagues.js';
+import Balance from 'components/Balance/Balance.js';
 import React, { useEffect, useState } from 'react';
+import { Redirect } from 'react-router-dom';
 import { API } from '../../api/index.js';
+
 
 export default function JoinLeague (props) {
 
@@ -11,6 +14,7 @@ export default function JoinLeague (props) {
   const [loading, setLoading] = useState(false);
   const [league, setLeague] = useState({})
   const [error, setError] = useState(false);
+  const [success, setSuccess] = useState(false);
 
 
   useEffect(() => {
@@ -31,7 +35,10 @@ export default function JoinLeague (props) {
   const joinLeague = () => {
     setError(false)
     API.post('/team/add', { leagueId, password })
-      .then(res => console.log(res))
+      .then(res => {
+        setPassword('');
+        setSuccess(true)
+        console.log(res)})
       .catch(err => {
         console.log('error', err)
         setError(err.data)
@@ -41,7 +48,7 @@ export default function JoinLeague (props) {
 
   return (
     <Container>
-      {!loading && 
+      {!loading && !success && 
         <>
           <h2>Join League</h2>
           
@@ -64,6 +71,8 @@ export default function JoinLeague (props) {
           <AlertTitle>{error}</AlertTitle>
         </Alert>
       }
+      {success && <Redirect to={'/'}/>}
+      <Balance activeBets={null} />
     </Container>
   );
 }

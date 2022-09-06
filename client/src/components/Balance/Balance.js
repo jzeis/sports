@@ -3,7 +3,6 @@ import CurrencyFormat from 'react-currency-format';
 import AccountMenu from '../Navbar/Menu';
 
 const Balance = (props) => {
-  console.log(props);
   const { balance, activeBets = [] } = props;
 
   const containerStyles = {
@@ -45,9 +44,8 @@ const Balance = (props) => {
         <AccountMenu />
       </div>
       <div style={flexContainerStyles}>
-        <div style={cellStyles}>Active Bets: {activeBets.length}</div>
-        <div style={cellStyles}>Balance: <CurrencyFormat value={balance} displayType={'text'} thousandSeparator={true} prefix={'$'} />
-      </div>
+        {activeBets && <div style={cellStyles}>Active Bets: {activeBets.length}</div>}
+        {balance && <div style={cellStyles}>Balance: <CurrencyFormat value={balance} displayType={'text'} thousandSeparator={true} prefix={'$'} /></div>}
     </div>
     </div>
   );

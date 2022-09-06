@@ -14,7 +14,6 @@ const SignUp = () => {
   const [isSignup, setIsSignup] = useState(false);
   const dispatch = useDispatch();
   const auth = useSelector(state => state.auth);
-  console.log('auth', auth)
   const history = useHistory();
   const classes = useStyles();
 
@@ -41,7 +40,7 @@ const SignUp = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Paper color="primary" className={classes.paper} elevation={3}>
+      <Paper color="primary" className={classes.paper}  elevation={3}>
         {/* <Avatar className={classes.avatar}> */}
           <LockIcon fontSize="large" color="primary"/>
         {/* </Avatar> */}
@@ -63,7 +62,7 @@ const SignUp = () => {
           </Button>
           <Grid container sx={{justifyContent: 'center'}}>
             <Grid item>
-              <Button sx={{textTransform: 'none'}} onClick={switchMode}>
+              <Button sx={{textTransform: 'none', color: '#fff'}} onClick={switchMode}>
                 { isSignup ? 'Already have an account? Sign in' : "Don't have an account? Sign Up" }
               </Button>
             </Grid>

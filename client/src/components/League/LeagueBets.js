@@ -33,8 +33,9 @@ const LeagueBets = ({bets, league, teams}) => {
 
   return (
     <div className="container container-bg">
-      {league?.leagueName && <h2>{league.leagueName} <span style={{fontSize: '.8rem', color: '#dad4d4', fontStyle: 'italic'}}>(Weeks {league?.startWeek} - {league?.endWeek})</span></h2>}
-      <h3>Standings</h3>
+      {league?.leagueName && 
+        <h1 className='primary-text'>{league.leagueName} <span style={{fontSize: '.8rem', color: '#dad4d4', fontStyle: 'italic'}}>(Weeks {league?.startWeek} - {league?.endWeek})</span></h1>      }
+      <h2 className='h4'>Standings</h2>
       <TableContainer sx={{marginBottom: '20px'}} component={Paper}>
         <Table size="small" aria-label="standings">
           <TableHead>
@@ -52,7 +53,7 @@ const LeagueBets = ({bets, league, teams}) => {
         </Table>
       </TableContainer>
       
-      <h2>Week {league?.currentWeek} Bets</h2>
+      <h2 className='h4'>Week {league?.currentWeek} Bets</h2>
       {!bets.length && 
         <>
           <p>No active bets for this week</p>

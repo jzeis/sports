@@ -61,7 +61,7 @@ export default function AccountMenu() {
         {/* <Typography component="div" sx={{ minWidth: 100 }}><Link to="/">Leagues</Link></Typography> */}
         <Tooltip title="Account settings">
           <IconButton onClick={handleClick} size="small" >
-            <Avatar sx={{ width: 32, height: 32 }}>{user?.result?.name?.charAt(0) || 'M' }</Avatar>
+            <Avatar sx={{ width: 32, height: 32 }}>{user?.result?.name?.charAt(0).toUpperCase() || 'M' }</Avatar>
           </IconButton>
         </Tooltip>
       </Box>

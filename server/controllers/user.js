@@ -37,7 +37,7 @@ export const signup = async (req, res) => {
 
     const result = await UserModel.create({ email, password: hashedPassword, name: `${firstName} ${lastName}` });
 
-    const token = jwt.sign( { email: result.email, id: result._id }, secret, { expiresIn: '7d' } );
+    const token = jwt.sign( { email: result.email, id: result._id, name: result.name }, secret, { expiresIn: '7d' } );
 
     res.status(201).json({ result, token });
   } catch (error) {

@@ -1,5 +1,5 @@
-import { makeStyles } from '@mui/material';
 import { deepPurple } from '@mui/material/colors';
+import { makeStyles } from "@mui/styles";
 
 export default makeStyles((theme) => ({
   mainContainer: {

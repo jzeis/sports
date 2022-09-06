@@ -1,31 +1,68 @@
-import { isAfter, isBefore, isSameDay } from 'date-fns';
 import express from 'express';
-import Spreads from '../models/spreads.js';
-import { getWeeksObj } from '../utilities/weeks.js';
-
+import League from '../models/league.js';
+import Team from '../models/team.js';
 
 const router = express.Router();
-const weeks = getWeeksObj();
 
-export const createTeam = async (req, res) => { 
+export const createTeam = async (req, res) => {
+  if (!req.userId) {
+    return res.json({ message: 'Unauthenticated' });
+  }
+
   try {
-    const name = req.params.week ? `week${req.params.week}-spreads` : 'latestSpreads';
-    Spreads.findOne({name: name})
-      .then(data => {
-        const spreadList = JSON.parse(data.spreads);
-        const selectedWeek = req.params.week; 
+    const league = await League.findOne({_id: req.body.leagueId});
+    if(!league) {
+      throw new Error('No league found');
+    }
 
-        const startDate = new Date(weeks[selectedWeek].startDate);
-        const endDate = new Date(weeks[selectedWeek].endDate);
-        const filteredSpreadList = spreadList.filter(game => {
-          const gameDate = new Date(game.commence_time);
-          return (isSameDay(gameDate, startDate) || isAfter(gameDate, startDate))
-                        && (isSameDay(gameDate, endDate) || isBefore(gameDate, endDate));
-        });
-        res.json(filteredSpreadList);
-      });
+    const otherTeams = await Team.find({leagueId: league._id, ownerId: req.userId});
+    if (otherTeams?.length) {
+      throw new Error('Already in league');
+    }
+  
+    if(req.body.password !== league.password) {
+      throw new Error('Invalid password');
+    }
+    const newTeam = new Team({
+      ownerId: req.userId,
+      teamName: req.userName,
+      leagueId: league._id,
+      balance: league.startingBalance,
+      weekStartBalance: league.startingBalance,
+      win: 0,
+      loss: 0,
+      tie: 0
+    }); 
+        
+    newTeam.save()
+      .then(() => {
+        league.teams.push(newTeam._id);
+        league.save();
+        res.json(newTeam);
+      })
+      .catch(err => res.status(400).json(`${err}`));
   } catch (error) {
-    res.status(400).json('Error: ' + err);
+    res.status(400).json('Error' + error);
+  }
+};
+
+export const changeTeamName = async (req, res) => { 
+  try {
+    const { teamName } = req.body;
+    const team = await Team.findById(req.params.teamId);
+
+    if (team.ownerId !== req.userId) {
+      throw new Error('You\'re not the owner of this team');
+    }
+
+    team.teamName = teamName;
+    team.save()
+      .then(team => res.json(team))
+      .catch((e) => {throw new Error(`Error saving new teamName - ${e}`);});
+    
+  } catch (error) {
+    console.log('Error: ' + error);
+    res.status(400).json('Error: ' + error);
   }
 };
 

@@ -20,6 +20,13 @@ body {
 	cursor: pointer;
 }
 
+.primary-text {
+	color: #f7f73b;
+	border-bottom: 1px solid #f7f73b;
+    margin-bottom: 20px;
+    padding-bottom: 4px;
+}
+
 .container-bg {
 	background: #121212;
 }
@@ -37,6 +44,16 @@ body {
 	align-items: center;
 	justify-self: center;
     width: 100%;
+}
+
+.bet-cell.logo {
+	max-width: 50px;
+	max-height: 50px;
+}
+
+.bet-cell.logo > img {
+	max-width: 50px;
+	height: auto;
 }
 
 .bet-cell button {
@@ -83,6 +100,10 @@ body {
 .spread-header {
 	font-size: 18px;
 	font-weight: bold;
+}
+
+.spread-block:first-of-type > div {
+	border-top: none !important;
 }
 
 .at-separator {

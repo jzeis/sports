@@ -1,5 +1,9 @@
-import { FormControl, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableContainer } from '@mui/material';
+import CancelIcon from '@mui/icons-material/Cancel';
+import CheckIcon from '@mui/icons-material/Check';
+import EditIcon from '@mui/icons-material/Edit';
+import { FormControl, IconButton, InputLabel, MenuItem, Paper, Select, Table, TableBody, TableContainer, TextField } from '@mui/material';
 import { getTeamBets } from 'actions/bets.js';
+import { editeamName } from 'actions/teams';
 import BetRow from 'components/Bets/BetRow';
 import { SET_TEAM_BETS } from 'constants/actionTypes';
 import React, { useEffect, useState } from 'react';
@@ -12,6 +16,8 @@ const Team = ({bets, league, team, scores}) => {
 
   const [week, changeWeek] = useState(currentWeek);
   const [amountWon, updateAmountWon] = useState(0);
+  const [isEditting, setIsEditting] = useState(false);
+  const [newTeamName, updateTeamName] = useState({value: team.teamName, error: ''});
 
   const dispatch = useDispatch();
   console.log('Team props', team);
@@ -41,6 +47,21 @@ const Team = ({bets, league, team, scores}) => {
     dispatch({ type: SET_TEAM_BETS, payload: { week, bets: newBets } });
   };
 
+  const saveTeamName = async () => {
+    if (!newTeamName.value?.length ) {
+      updateTeamName({...newTeamName, error: 'Name Required'})
+    } else if (newTeamName.value?.length > 20 ) {
+      updateTeamName({...newTeamName, error: 'Name is too long'})
+    }
+    await dispatch(editeamName(team._id, newTeamName.value));
+    setIsEditting(false);
+  }
+
+  const cancelTeamRename = () => {
+    updateTeamName({value: team.teamName, error: ''});
+    setIsEditting(false);
+  }
+
   const weeksSelect = () => {
     const weeks = [];
     for (let i = parseInt(league.startWeek, 10); i <= parseInt(league.endWeek, 10); i += 1) {
@@ -52,7 +73,30 @@ const Team = ({bets, league, team, scores}) => {
 
   return (
     <div className="container container-bg">
-      <h1>{team.teamName}</h1>
+              
+      {!isEditting && <h1 className='primary-text'>{team.teamName} 
+        <IconButton 
+          sx={{marginLeft: '5px'}}
+          onClick={() => setIsEditting(true)}
+          aria-label="Edit Team"><EditIcon fontSize='small' /></IconButton></h1>
+      }
+      {isEditting &&
+        <div style={{marginBottom: '10px'}}>
+          <TextField
+            error={!!newTeamName.error}
+            helperText={newTeamName.error}
+            id="editTeamName"
+            label="Edit Team Name"
+            value={newTeamName.value}
+            inputProps={{ max: 20 }}
+            variant="standard"
+            onChange={(e) => updateTeamName({...newTeamName, value: e.target.value})}
+          />
+          <IconButton onClick={() => saveTeamName()}><CheckIcon color="primary" /></IconButton>
+          <IconButton onClick={cancelTeamRename}><CancelIcon /></IconButton>
+        </div>
+      }
+      
       <FormControl variant='standard'>
         <InputLabel id="week-selector">Week</InputLabel>
         <Select
@@ -68,8 +112,8 @@ const Team = ({bets, league, team, scores}) => {
       {/* <p>Amount Won: {amountWon}</p> */}
 
       <div>
-        <h2>Week {week} Bets</h2>
-        {!bets?.[week]?.length && <p>You havent placed any bets for week {week}</p>}
+        <h2 className='h4'>Week {week} Bets</h2>
+        {!bets?.[week]?.length && <p style={{fontStyle:'italic', fontSize: '.8rem'}}>-You havent placed any bets for week {week}</p>}
         <TableContainer sx={{marginBottom: '20px'}} component={Paper}>
         <Table size="small" aria-label="standings">
           

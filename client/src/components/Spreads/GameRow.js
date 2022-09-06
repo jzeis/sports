@@ -22,7 +22,7 @@ const GameRow = (props) => {
 
   const underObj = {
     team: `${homeTeamObj.abbreviation}/${awayTeamObj.abbreviation}`,
-    points: homeTeamObj.odds.overUnder || '50',
+    points: homeTeamObj.odds.overUnder || '-',
     type: betTypes.under,
   };
 
@@ -30,7 +30,6 @@ const GameRow = (props) => {
 
   const [teamBet, setTeamBet] = useState(null);
   const [betAmount, setBetAmount] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const styles = {
     containerStyles: {
@@ -39,7 +38,7 @@ const GameRow = (props) => {
       padding: '20px 8px',
       display: 'grid',
       textAlign: 'center',
-      gridTemplateColumns: '1fr 1fr 1fr 1fr',
+      gridTemplateColumns: 'auto 1fr 1fr 1fr',
       gridTemplateRows: 'auto auto 1fr 1fr',
       gridGap: '10px',
       gridTemplateAreas:
@@ -95,7 +94,7 @@ const GameRow = (props) => {
   };
 
   return (
-    <div>
+    <div className='spread-block'>
       <div style={styles.containerStyles}>
         <p className="spread-header" style={styles.spreadHeader}>{awayTeamObj.displayName} <span className="at-separator">at</span> {homeTeamObj.displayName}</p>
         <div style={{ gridArea: 'label1' }} className="label" />
@@ -104,7 +103,7 @@ const GameRow = (props) => {
         <div style={{ gridArea: 'label4' }} className="label">Amount</div>
 
         {/* <div style={styles.gridAwayTeam} className="team bet-cell"><p>{awayTeamObj.name}</p></div> */}
-        <div style={styles.gridAwayTeam} className="team bet-cell"><img height="50" width="50" src={awayTeamObj.logo} alt={awayTeamObj.name} title={awayTeamObj.name} /></div>
+        <div style={styles.gridAwayTeam} className="team bet-cell logo"><img src={awayTeamObj.logo} alt={awayTeamObj.name} title={awayTeamObj.name} /></div>
         <div style={styles.gridAwaySpread} className="bet-spread bet-cell">
           <input className="bet-input sr-only" type="radio" onChange={() => setTeamBet(awayTeamSpread)} value={awayTeamObj.name} name={`${game.id}-radio`} id={`${game.id}-input-${awayTeamObj.name}`} />
           <label className={`bet-label ${JSON.stringify(teamBet) === JSON.stringify(awayTeamSpread) ? 'selected' : ''}`} htmlFor={`${game.id}-input-${awayTeamObj.name}`}>
@@ -118,7 +117,7 @@ const GameRow = (props) => {
           </label>
         </div>
 
-        <div style={styles.gridHomeTeam} className="team bet-cell"><img height="50" width="50" src={homeTeamObj.logo} alt={homeTeamObj.name} title={homeTeamObj.name} /></div>
+        <div style={styles.gridHomeTeam} className="team bet-cell logo"><img src={homeTeamObj.logo} alt={homeTeamObj.name} title={homeTeamObj.name} /></div>
         {/* <div style={styles.gridHomeTeam} className="team bet-cell"><p>{homeTeamObj.name}</p></div> */}
         <div style={styles.gridHomeSpread} className="bet-spread bet-cell">
           <input className="bet-input sr-only" type="radio" onChange={() => setTeamBet(homeTeamSpread)} value={homeTeamObj.name} name={`${game.id}-radio`} id={`${game.id}-input-${homeTeamObj.name}`} />

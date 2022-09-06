@@ -1,30 +1,28 @@
-import { makeStyles } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 export default makeStyles((theme) => ({
   paper: {
-    marginTop: theme.spacing(8),
+    marginTop: 16,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: theme.spacing(2),
+    padding: 16,
   },
   root: {
     '& .MuiTextField-root': {
-      margin: theme.spacing(1),
+      margin: 8,
     },
   },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: '#000',
-  },
+
   form: {
     width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(3),
+    marginTop: 16,
   },
   submit: {
-    margin: theme.spacing(3, 0, 2),
+    margin: '24px 0 16px'
+    // margin: theme.spacing(3, 0, 2),
   },
   googleButton: {
-    marginBottom: theme.spacing(2),
+    marginBottom: 16,
   },
 }));

@@ -34,7 +34,7 @@ export default function SpreadsList(props) {
 
   return (
     <div className="container container-bg">
-      <h2>Week {league?.currentWeek} Odds</h2>
+      <h1 className='primary-text'>Week {league?.currentWeek} Odds</h1>
       {league && league.currentWeek <= league.endWeek ?
         spreadsList()
         : <p>Spreads are not available for leagues that have ended</p>

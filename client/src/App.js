@@ -1,13 +1,19 @@
 import { Container, createTheme, ThemeProvider } from "@mui/material";
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
-import { BrowserRouter, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import Auth from "./components/Auth/Auth";
 import AuthenticatedRoute from "./components/Auth/AuthenticatedRoute";
 import BetList from "./components/Bets/Bets";
 import CreateLeague from "./components/League/CreateLeague";
 import JoinLeague from "./components/League/JoinLeague";
 import TeamsList from "./components/Team/TeamsList";
+
+// import { Theme } from '@mui/material/styles';
+
+// declare module '@mui/styles' {
+//   interface DefaultTheme extends Theme {}
+// }
 
 export const overrides = {
 	MuiTab: {
@@ -45,7 +51,6 @@ const App = () => (
 				<Switch>
 					<Route path="/auth" exact component={Auth} />
 
-					<AuthenticatedRoute path="/" exact component={TeamsList} />
 					<AuthenticatedRoute
 						path="/league/create"
 						exact
@@ -58,6 +63,8 @@ const App = () => (
 						exact
 						component={BetList}
 					/>
+					<AuthenticatedRoute path="/" exact component={TeamsList} />
+					<Redirect from="*" to="/" />
 				</Switch>
 			</Container>
 		</BrowserRouter>
