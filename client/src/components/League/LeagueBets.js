@@ -13,11 +13,11 @@ const LeagueBets = ({bets, league, teams}) => {
               key={team._id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell align="center">{i + 1}</TableCell>
-              <TableCell align="center">{team.teamName}</TableCell>
+              <TableCell sx={{padding: 0}} align="center">{i + 1}</TableCell>
+              <TableCell align="left">{team.teamName}</TableCell>
               <TableCell align="center"><CurrencyFormat value={team.weekStartBalance} displayType={'text'} thousandSeparator={true} prefix={'$'}/></TableCell>
               <TableCell align="center">{team.win}-{team.loss}-{team.tie}</TableCell>
-              <TableCell align="center">{team.weekChange}</TableCell>
+              <TableCell align="center">{`${team.weekChange > 0 ? '+' : ''}`}<CurrencyFormat value={team.weekChange} displayType={'text'} thousandSeparator={true} prefix={'$'}/></TableCell>
             </TableRow>
       })
     );
@@ -40,8 +40,8 @@ const LeagueBets = ({bets, league, teams}) => {
         <Table size="small" aria-label="standings">
           <TableHead>
             <TableRow>
-            <TableCell align="center">Rank</TableCell>
-            <TableCell align="center">Team</TableCell>
+            <TableCell sx={{paddingRight: 0}} align="center"></TableCell>
+            <TableCell align="left">Team</TableCell>
               <TableCell align="center">Balance</TableCell>
               <TableCell align="center">Record</TableCell>
               <TableCell align="center">Change</TableCell>

@@ -1,0 +1,1 @@
+export const spreadRefreshInterval = 15;

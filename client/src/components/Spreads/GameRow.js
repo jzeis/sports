@@ -1,10 +1,10 @@
 import { Button } from '@mui/material';
 import { betTypes } from 'constants/betTypes.constants';
+import { format } from 'date-fns/esm';
 import { default as React, useState } from 'react';
 import CurrencyFormat from 'react-currency-format';
 
-const GameRow = (props) => {
-  const { game, placeBetFunc, maxBet } = props;
+const GameRow = ({ game, placeBetFunc, maxBet }) => {
   const homeTeamObj = game.teams.find((team) => team.homeAway === 'home');
   const awayTeamObj = game.teams.find((team) => team.homeAway === 'away');
 
@@ -49,6 +49,7 @@ const GameRow = (props) => {
     },
     spreadHeader: {
       gridArea: 'spreadHeader',
+      marginBottom: 0
     },
     gridLabel: {
       gridArea: 'label',
@@ -84,6 +85,10 @@ const GameRow = (props) => {
     setBetAmount('');
   };
 
+  const formattedDate = (dateString) => {
+    return format(new Date(dateString), 'ccc h:mmaaa');
+  }
+
   const placeBet = () => {
     const betObj = {
       ...teamBet,
@@ -96,8 +101,8 @@ const GameRow = (props) => {
   return (
     <div className='spread-block'>
       <div style={styles.containerStyles}>
-        <p className="spread-header" style={styles.spreadHeader}>{awayTeamObj.displayName} <span className="at-separator">at</span> {homeTeamObj.displayName}</p>
-        <div style={{ gridArea: 'label1' }} className="label" />
+        <p className="spread-header" style={styles.spreadHeader}>{awayTeamObj.name} <span className="at-separator">at</span> {homeTeamObj.name}</p>
+        <div style={{ gridArea: 'label1' }} className="label date-label" ><span style={{fontSize: '.8rem', color: 'gray'}}>{formattedDate(game.date)}</span></div>
         <div style={{ gridArea: 'label2' }} className="label">Spread</div>
         <div style={{ gridArea: 'label3' }} className="label">O/U</div>
         <div style={{ gridArea: 'label4' }} className="label">Amount</div>
@@ -107,7 +112,7 @@ const GameRow = (props) => {
         <div style={styles.gridAwaySpread} className="bet-spread bet-cell">
           <input className="bet-input sr-only" type="radio" onChange={() => setTeamBet(awayTeamSpread)} value={awayTeamObj.name} name={`${game.id}-radio`} id={`${game.id}-input-${awayTeamObj.name}`} />
           <label className={`bet-label ${JSON.stringify(teamBet) === JSON.stringify(awayTeamSpread) ? 'selected' : ''}`} htmlFor={`${game.id}-input-${awayTeamObj.name}`}>
-            {awayTeamSpread.points}
+            <span>{`${awayTeamSpread.points > 0 ? '+' : ''}${awayTeamSpread.points}`}</span>
           </label>
         </div>
         <div style={styles.gridOverUnder} className="under bet-cell">
@@ -122,7 +127,7 @@ const GameRow = (props) => {
         <div style={styles.gridHomeSpread} className="bet-spread bet-cell">
           <input className="bet-input sr-only" type="radio" onChange={() => setTeamBet(homeTeamSpread)} value={homeTeamObj.name} name={`${game.id}-radio`} id={`${game.id}-input-${homeTeamObj.name}`} />
           <label className={`bet-label ${JSON.stringify(teamBet) === JSON.stringify(homeTeamSpread) ? 'selected' : ''}`} htmlFor={`${game.id}-input-${homeTeamObj.name}`}>
-            <span>{homeTeamSpread.points}</span>
+            <span>{`${homeTeamSpread.points > 0 ? '+' : ''}${homeTeamSpread.points}`}</span>
           </label>
         </div>
         <div style={styles.gridOverUnder} className="under bet-cell">

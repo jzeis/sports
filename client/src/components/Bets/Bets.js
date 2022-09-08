@@ -62,8 +62,11 @@ export default function BasicTabs(props) {
   useEffect(() => {
     dispatch(getLeague(leagueId));
     dispatch(getLeagueBets(leagueId));
-    dispatch(getAllTeamsInLeague(leagueId));
   }, [leagueId]);
+
+  useEffect(() => {
+    dispatch(getAllTeamsInLeague(leagueId));
+  }, [leagueId, teams.selectedTeam]);
 
   useEffect(() => {
     dispatch(getTeam(teamId));

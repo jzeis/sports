@@ -7,7 +7,7 @@ export default (bets = { allBets: [], teamBets: {} }, action) => {
     case SET_TEAM_BETS:
       return { ...bets, teamBets: { ...bets.teamBets, [action.payload.week]: action.payload.bets } };
     case ADD_BET:
-      const curWeekBets = bets.teamBets[action.payload.gameWeek];
+      const curWeekBets = bets.teamBets[action.payload.gameWeek] || [];
       return { ...bets, teamBets: { ...bets.teamBets, [action.payload.gameWeek]: [...curWeekBets, action.payload] } };
     default:
       return bets;

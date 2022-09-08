@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { format } from 'date-fns/esm';
 import { betTypes } from '../constants/betTypes.constants.js';
 
 export const calculateBet = (betOnTeam, opposingTeam, bet) => {

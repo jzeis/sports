@@ -9,23 +9,6 @@ import CreateLeague from "./components/League/CreateLeague";
 import JoinLeague from "./components/League/JoinLeague";
 import TeamsList from "./components/Team/TeamsList";
 
-// import { Theme } from '@mui/material/styles';
-
-// declare module '@mui/styles' {
-//   interface DefaultTheme extends Theme {}
-// }
-
-export const overrides = {
-	MuiTab: {
-		// general overrides for your material tab component here
-		root: {
-		  backgroundColor: 'red',
-		  '&$selected': {
-			backgroundColor: 'blue',
-		  }
-		},
-	  },
-}
 export const themeOptions = {
   palette: {
     mode: 'dark',
@@ -35,11 +18,35 @@ export const themeOptions = {
     secondary: {
       main: '#f50057',
     },
+	// action: {
+	// 	// active: '#f7f73b',
+	// 	activeOpacity: 1,
+	// 	// hover: '#f7f73b',
+	// 	hoverOpacity: 0.7,
+	// 	focus: '#f7f73b',
+	// 	focusOpacity: 1,
+	// 	// selected: '#f7f73b',
+	// 	selectedOpacity: 1
+	//   },
   },
+  components: {
+	MuiLink: {
+		styleOverrides: {
+		  root: {
+			textDecoration: "none",
+			":hover": {
+			  textDecoration: "none",
+			  color: '#fff',
+			},
+		  },
+		},
+	  },
+  }
 };
 
 const appTheme = createTheme({
 	palette: themeOptions.palette,
+	components: themeOptions.components
 });
 
 const App = () => (
