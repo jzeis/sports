@@ -30,16 +30,19 @@ export default function BetRow(props) {
     },
   };
 
+  console.log(bet.gameStatus)
+
   return (
     <TableRow
       key={bet._id}
+      className={bet.gameStatus === "In Progress" ? bet.result : ''}
       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
     >
       <TableCell align="center">{bet.team}</TableCell>
       <TableCell align="center">{formatBetType(bet)}</TableCell>
       <TableCell align="center">${bet.amount}</TableCell>
       <TableCell align="center">{formatGameTime(bet.gameDate)}</TableCell>
-      <TableCell align="center">{bet.result}</TableCell>
+      <TableCell align="center">{bet.gameStatus === 'In Progress' ? '' : bet.result}</TableCell>
       {bet.teamName && <TableCell align="center">{bet.teamName}</TableCell>}
     </TableRow>
   );

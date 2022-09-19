@@ -36,8 +36,6 @@ export const mapScores = (scores) => {
     status: game[0]?.status?.type,
     date: game[0]?.date,
   }));
-  console.log('scores', scores);
-  console.log('mapped scores', gameData);
 
   return gameData;
 };

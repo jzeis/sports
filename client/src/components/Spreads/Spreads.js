@@ -9,10 +9,23 @@ export default function SpreadsList(props) {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const { league, team } = props;
+  const [time, setTime] = useState(new Date());
 
   useEffect(() => {
     if (league && league.currentWeek <= league.endWeek) { dispatch(getSpreads(props.league.currentWeek)); }
   }, [league?.currentWeek]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(new Date());
+      console.log('new time set');
+    }
+      , 60000);
+    return () => {
+      console.log('interval cleared')
+      clearInterval(interval);
+    }
+  }, [])
 
   const placeBet = async (betObj, cb = () => null) => {
     const { id } = spreadsData;
@@ -30,7 +43,17 @@ export default function SpreadsList(props) {
     setLoading(false);
   };
 
-  const spreadsList = () => spreadsData.spreads.map((currentGame) => <GameRow game={currentGame} maxBet={team.balance} key={currentGame.id} placeBetFunc={placeBet} />);
+  const spreadsList = () => {
+   return spreadsData.spreads
+    // .filter(game => {
+    //   const currentTime = addMinutes(time, 5);
+    //   const gameTime = new Date(game.date);
+    //   // console.log(currentTime, gameTime, isBefore(currentTime, gameTime))
+    //   return isBefore(currentTime, gameTime);
+
+    // })
+    .map((currentGame) => <GameRow game={currentGame} maxBet={team.balance} key={currentGame.id} placeBetFunc={placeBet} />)
+  };
 
   return (
     <div className="container container-bg">

@@ -4,7 +4,7 @@ import { default as Scores } from '../models/scores.js';
 import { getWeekNumber } from './weeks.js';
 
 export const getScores = async (week) => { 
-  const weekNum = await getWeekNumber();
+  const weekNum = week || await getWeekNumber();
   console.log('getting scores for week', week);
   return new Promise((resolve, reject) => {
     try {
@@ -64,8 +64,6 @@ export const mapScores = (scores) => {
     status: game[0]?.status?.type,
     date: game[0]?.date,
   }));
-  // console.log('scores', scores);
-  // console.log('mapped scores', gameData[0]);
   
   return gameData;
 };

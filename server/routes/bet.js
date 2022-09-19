@@ -1,6 +1,7 @@
  
-import { isAfter } from 'date-fns';
+import { addMinutes, isAfter, isBefore } from 'date-fns';
 import express from 'express';
+import { minutesBeforeGameLock } from '../constants/config.constants.js';
 import { processWeekBets } from '../controllers/bets.js';
 import auth from '../middleware/auth.js';
 import Bet from '../models/bet.js';
@@ -24,35 +25,56 @@ const saveBet = (bet, req, res) => {
 };
 
 router.post('/add', auth, async (req, res) => {
-  if (!req.userId) {
-    return res.json({ message: 'Unauthenticated' });
-  }
-  const {teamId, team, points, gameDate, type} = req.body;
-  const numAmount = parseInt(req.body.amount);
+  try {  
+    if (!req.userId) {
+      return res.json({ message: 'Unauthenticated' });
+    }
+    const {teamId, team, points, gameDate, type} = req.body;
 
-  if (numAmount <= 0) {
-    return res.status(400).json('Invalid bet amount');
-  }
+    const userTeam = await Team.findOne({_id: teamId, ownerId: req.userId});
 
-  const newBet = new Bet({
-    userId: req.userId,
-    teamId: teamId,
-    team: team,
-    points: points,
-    type: type || 'points',
-    amount: numAmount,
-    gameWeek: await getWeekNumber(),
-    gameDate: new Date(gameDate),
-    processed: false
-  });
-
-  Team.findById(teamId).then(team => {
-    if (team?.balance < numAmount) {
-      return res.status(400).json('Not enough money for bet');
+    if (!userTeam) {
+      throw new Error('No team found');
     }
 
-    saveBet(newBet, req, res);
-  });
+    const numAmount = parseInt(req.body.amount);
+    if (userTeam?.balance < numAmount) {
+      throw new Error('Not enough money for bet');
+    }
+
+    const currentTime = addMinutes(new Date(), minutesBeforeGameLock);
+
+    // Filter out games that have started
+    if (!isBefore(currentTime, new Date(gameDate))) {
+      throw new Error('Game is locked');
+    }
+
+    if (numAmount <= 0) {
+      throw new Error('Invalid bet amount');
+    }  
+
+    const bet = new Bet({
+      userId: req.userId,
+      teamId: teamId,
+      team: team,
+      points: points,
+      type: type || 'points',
+      amount: numAmount,
+      gameWeek: await getWeekNumber(),
+      gameDate: new Date(gameDate),
+      processed: false
+    });
+
+    await bet.save();
+
+    userTeam.balance = userTeam.balance - Math.abs(bet.amount);
+    await userTeam.save();
+
+    res.json(bet);
+  }
+  catch(err) {
+    return res.status(400).json(err.toString());
+  }
 });
 
 // Check this out - might not be used

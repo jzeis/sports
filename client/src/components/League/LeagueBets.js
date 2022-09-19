@@ -1,9 +1,26 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Checkbox, FormControlLabel, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import axios from 'axios';
 import BetRow from 'components/Bets/BetRow';
-import React from 'react';
+import { isBefore, isEqual } from 'date-fns/esm';
+import React, { useEffect, useState } from 'react';
 import CurrencyFormat from 'react-currency-format';
+import { calculateBets } from 'utilities/betOperations';
+import { mapScores } from 'utilities/mapScores';
 
 const LeagueBets = ({bets, league, teams}) => {
+  const [scores, setScores] = useState()
+  const [hideFinished, setHideFinished] = useState(JSON.parse(sessionStorage.getItem('hideFinished') || 'false'));
+
+  useEffect(() => {
+    getScores()
+  }, [])
+
+  const getScores = () => {
+    axios.get(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard`)
+      .then((res) => {
+        setScores(mapScores(res.data))
+      });
+  }
 
   const standings = () => {
     const sortedTeams = teams.sort((team1, team2) => team2.weekStartBalance - team1.weekStartBalance);
@@ -13,7 +30,7 @@ const LeagueBets = ({bets, league, teams}) => {
               key={team._id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell sx={{padding: 0}} align="center">{i + 1}</TableCell>
+              <TableCell sx={{padding: '0 0 0 5px'}} align="center">{i + 1}</TableCell>
               <TableCell align="left">{team.teamName}</TableCell>
               <TableCell align="center"><CurrencyFormat value={team.weekStartBalance} displayType={'text'} thousandSeparator={true} prefix={'$'}/></TableCell>
               <TableCell align="center">{team.win}-{team.loss}-{team.tie}</TableCell>
@@ -23,12 +40,34 @@ const LeagueBets = ({bets, league, teams}) => {
     );
   }; 
 
+  const toggleHideFinished = () => {
+    sessionStorage.setItem('hideFinished', `${!hideFinished}`);
+    setHideFinished(!hideFinished)
+  }
+
   const betList = () => {
-    const leagueBets = bets.map((bet) => ({
+    let leagueBets = bets.map((bet) => ({
       ...bet,
       teamName: teams.find((team) => team._id === bet.teamId)?.teamName,
     }));
-    return leagueBets.map((currentBet) => <BetRow bet={currentBet} key={currentBet._id} />);
+    if (scores) {
+      [leagueBets] = calculateBets(leagueBets, scores);
+    }
+    return leagueBets
+      .sort((bet1, bet2 ) => {
+        const date1 = new Date(bet1.gameDate);
+        const date2 = new Date(bet2.gameDate);
+        if (!isEqual(date1, date2)) {
+          return isBefore(date1, date2) ? -1 : 1;
+        } else {
+          if (bet1.teamName === bet2.teamName) {
+            return 0
+          }
+          return bet1.teamName > bet2.teamName ? 1 : -1
+        } 
+      })
+      .filter(bet => hideFinished ? bet.gameStatus !== 'Final' : true)
+      .map((currentBet) => <BetRow bet={currentBet} key={currentBet._id} />);
   };
 
   return (
@@ -43,8 +82,8 @@ const LeagueBets = ({bets, league, teams}) => {
             <TableCell sx={{paddingRight: 0}} align="center"></TableCell>
             <TableCell align="left">Team</TableCell>
               <TableCell align="center">Balance</TableCell>
-              <TableCell align="center">Record</TableCell>
-              <TableCell align="center">Change</TableCell>
+              <TableCell align="center">W-L-T</TableCell>
+              <TableCell align="center" title='Weekly change'>+/-</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -54,6 +93,9 @@ const LeagueBets = ({bets, league, teams}) => {
       </TableContainer>
       
       <h2 className='h4'>Week {league?.currentWeek} Bets</h2>
+
+      {!!bets.length && <FormControlLabel control={<Checkbox checked={hideFinished} onChange={(e) => setHideFinished(toggleHideFinished)}/>} label="Hide Finished" />}
+
       {!bets.length && 
         <>
           <p>No active bets for this week</p>
@@ -76,7 +118,6 @@ const LeagueBets = ({bets, league, teams}) => {
         </tbody>
       </table>
       }
-      {/* <button type="button" onClick={this.calculateBets}>Calculate bets</button> */}
     </div>
   );
 };

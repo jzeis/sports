@@ -1,8 +1,6 @@
 import { API } from 'api';
 import axios from 'axios';
 import React, { Component } from 'react';
-import { calculateBets } from 'utilities/betOperations';
-import { mapScores } from 'utilities/mapScores';
 import BetRow from './BetRow';
 
 
@@ -36,17 +34,17 @@ export default class BetList extends Component {
   }
 
   getScores(week = 15) {
-    axios.get(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard`)
-      .then((res) => {
-        this.setState({ scores: mapScores(res.data) });
-        this.calculateBets();
-      });
+    // axios.get(`https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard`)
+    //   .then((res) => {
+    //     this.setState({ scores: mapScores(res.data) });
+    //     this.calculateBets();
+    //   });
   }
 
   calculateBets() {
-    const { bets, scores } = this.state;
-    const [newBets, amountWon] = calculateBets(bets, scores);
-    this.setState({ bets: newBets, amountWon });
+    // const { bets, scores } = this.state;
+    // const [newBets, amountWon] = calculateBets(bets, scores);
+    // this.setState({ bets: newBets, amountWon });
   }
 
   betList() {

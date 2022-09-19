@@ -90,11 +90,23 @@ body {
 .bets-table tr {
 	border-bottom: 5px solid #121212;
 	margin-bottom: 5px;
+	background: #242424;
+}
+
+.bets-table tr.W td {
+	background: rgb(116 252 0 / 25%);
+}
+
+.bets-table tr.L td {
+	background: rgb(135 9 9 / 46%);
+}
+
+.bets-table tr.T td {
+	background: rgb(255 255 0 / 40%);
 }
 
 .bets-table td {
 	padding: 5px;
-	background: #242424;
 }
 
 .spread-header {

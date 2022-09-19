@@ -4,11 +4,14 @@ import { betTypes } from '../constants/betTypes.constants.js';
 export const calculateBet = (betOnTeam, opposingTeam, bet) => {
   switch (bet.type) {
     case 'points':
-      return +betOnTeam.score + +bet.points > +opposingTeam.score ? 'Win' : 'Loss';
+        if (+betOnTeam.score + +bet.points === +opposingTeam.score) {return 'T'}
+      return +betOnTeam.score + +bet.points > +opposingTeam.score ? 'W' : 'L';
     case 'over':
-      return +betOnTeam.score + +opposingTeam.score > +bet.points ? 'Win' : 'Loss';
+      if (+betOnTeam.score + +opposingTeam.score === +bet.points) { return 'T' }
+      return +betOnTeam.score + +opposingTeam.score > +bet.points ? 'W' : 'L';      
     case 'under':
-      return +betOnTeam.score + +opposingTeam.score < +bet.points ? 'Win' : 'Loss';
+      if(+betOnTeam.score + +opposingTeam.score === +bet.points) {return 'T'}
+      return +betOnTeam.score + +opposingTeam.score < +bet.points ? 'W' : 'L';
 
     default:
       return null;
@@ -24,17 +27,18 @@ export const calculateBets = (bets, scores) => {
     // Find the game in the list of espn scores
     const game = scores.find((gameScore) => gameScore.teams.find((team) => team.abbreviation === teamName));
 
+    if(!game) {return bet}
     // Create new bet object
-    const newBet = { ...bet };
-    if (game && game.status.description === 'Final') {
+    const newBet = { ...bet, gameStatus: game.status.description };
+    // if (game && game.status.description === 'Final') {
       // const betOnTeam = game.teams.find((team) => team.displayName === teamName || teamName.indexOf(team.displayName) >= 0);
-      const betOnTeam = game.teams.find((team) => team.abbreviation === teamName);
-      const opposingTeam = game.teams.find((team) => team !== betOnTeam);
-      // Get bet result
-      newBet.result = calculateBet(betOnTeam, opposingTeam, newBet);
-      // Add amount won
-      amountWon = newBet.result === 'Win' ? +amountWon + +newBet.amount : +amountWon - +newBet.amount;
-    }
+    const betOnTeam = game.teams.find((team) => team.abbreviation === teamName);
+    const opposingTeam = game.teams.find((team) => team !== betOnTeam);
+    // Get bet result
+    newBet.result = calculateBet(betOnTeam, opposingTeam, newBet);
+    // Add amount won
+    amountWon = newBet.result === 'W' ? +amountWon + +newBet.amount : +amountWon - +newBet.amount;
+    // }
 
     return newBet;
   });

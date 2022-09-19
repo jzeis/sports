@@ -26,7 +26,8 @@ router.get('/league/:leagueId', auth, (req, res) => {
 
   Team.find({leagueId: req.params.leagueId})
     .then(teams => {
-      const teamList = teams.map(({_id, teamName, weekStartBalance, win, loss, tie, weekChange = 0}) => ({_id, teamName, weekStartBalance, win, loss, tie, weekChange}));
+      const teamList = teams
+        .map(({_id, teamName, weekStartBalance, win, loss, tie, weekChange = 0, weekChangeData}) => ({_id, teamName, weekStartBalance, win, loss, tie, weekChange, weekChangeData: JSON.parse(weekChangeData)}));
       res.json(teamList);
     })
     .catch(err => res.status(400).json('Error: ' + err));
@@ -39,7 +40,7 @@ router.get('/:id?', auth, (req, res) => {
 
   Team.findById(req.params.id)
     .then(team => {
-      res.json(team);
+      res.json({...team.toObject(), weekChangeData: JSON.parse(team.weekChangeData)});
     })
     .catch(err => res.status(400).json('Error: ' + err));
 });

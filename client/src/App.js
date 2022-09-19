@@ -18,22 +18,13 @@ export const themeOptions = {
     secondary: {
       main: '#f50057',
     },
-	// action: {
-	// 	// active: '#f7f73b',
-	// 	activeOpacity: 1,
-	// 	// hover: '#f7f73b',
-	// 	hoverOpacity: 0.7,
-	// 	focus: '#f7f73b',
-	// 	focusOpacity: 1,
-	// 	// selected: '#f7f73b',
-	// 	selectedOpacity: 1
-	//   },
   },
   components: {
 	MuiLink: {
 		styleOverrides: {
 		  root: {
 			textDecoration: "none",
+			background: "none",
 			":hover": {
 			  textDecoration: "none",
 			  color: '#fff',

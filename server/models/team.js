@@ -12,6 +12,7 @@ const teamSchema = new Schema({
   win: { type: Number, required: false },
   loss: { type: Number, required: false },
   tie: { type: Number, required: false },
+  weekChangeData: {type: String, required: false}
 }, {
   timestamps: true,
 });

@@ -66,4 +66,14 @@ export const changeTeamName = async (req, res) => {
   }
 };
 
+export const setWeeklyChange = async () => {
+  const teams = await Team.find();
+  teams.forEach(team => {
+    const week1Data = { 1: team.weekChange};
+    team.weekChangeData = JSON.stringify(week1Data);
+    team.save();
+  });
+
+};
+
 export default router;

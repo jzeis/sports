@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux';
 import { calculateBets } from 'utilities/betOperations.js';
 import * as scoresApi from '../../actions/scores';
 
-const Team = ({bets, league, team, scores}) => {
+const Team = ({allBets, bets, league, team, scores}) => {
   const { currentWeek } = league;
 
   const [week, changeWeek] = useState(currentWeek);
@@ -20,7 +20,6 @@ const Team = ({bets, league, team, scores}) => {
   const [newTeamName, updateTeamName] = useState({value: team.teamName, error: ''});
 
   const dispatch = useDispatch();
-  console.log('Team props', team);
 
   const getScores = () => {
     dispatch(scoresApi.getScores(week));
@@ -48,7 +47,11 @@ const Team = ({bets, league, team, scores}) => {
   };
 
   const saveTeamName = async () => {
-    if (!newTeamName.value?.length ) {
+    const name = newTeamName?.value.trim();
+    // Cancel if it's the same as previous team name
+    if(name === team.teamName) {return cancelTeamRename()}
+
+    if (!name.length ) {
       updateTeamName({...newTeamName, error: 'Name Required'})
     } else if (newTeamName.value?.length > 20 ) {
       updateTeamName({...newTeamName, error: 'Name is too long'})
@@ -97,7 +100,12 @@ const Team = ({bets, league, team, scores}) => {
         </div>
       }
       
-      <FormControl variant='standard'>
+     
+      {/* <p>Amount Won: {amountWon}</p> */}
+
+      <div>
+        <h2 className='h4'>Week {week} Bets</h2>
+        <FormControl variant='standard'>
         <InputLabel id="week-selector">Week</InputLabel>
         <Select
           labelId="week-selector"
@@ -109,10 +117,6 @@ const Team = ({bets, league, team, scores}) => {
           {weeksSelect()}
         </Select>
       </FormControl>
-      {/* <p>Amount Won: {amountWon}</p> */}
-
-      <div>
-        <h2 className='h4'>Week {week} Bets</h2>
         {!bets?.[week]?.length && <p style={{fontStyle:'italic', fontSize: '.8rem'}}>-You havent placed any bets for week {week}</p>}
         <TableContainer sx={{marginBottom: '20px'}} component={Paper}>
         <Table size="small" aria-label="standings">

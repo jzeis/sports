@@ -45,9 +45,18 @@ export const processWeekBets = async (req, res) => {
         
         promiseList.push(bet.save());
       });
-      // team.balance += winnings;
+
+      // Set team properties
       team.weekChange = team.balance - team.weekStartBalance;
       team.weekStartBalance = team.balance;
+
+      // Get the weekchange object and parse string
+      const weekChangeObj = JSON.parse(team.weekChangeData || '{}');
+      // Set new week value
+      weekChangeObj[week] = team.weekChange;
+      // Stringify and set data on model
+      team.weekChangeData = JSON.stringify(weekChangeObj);
+
       promiseList.push(team.save());
     });
   });

@@ -5,6 +5,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import { calculateRecords, processWeekBets } from './controllers/bets.js';
 import { generateSpreads } from './controllers/spreads.js';
+import { setWeeklyChange } from './controllers/team.js';
 import { scheduleSpreads } from './jobs/cron-spreads.js';
 import betRouter from './routes/bet.js';
 import leagueRouter from './routes/league.js';
@@ -51,9 +52,10 @@ if (false) {
   getScores().then(scores => {
     saveSpreads(JSON.stringify(scores));
   });
+
+  setWeeklyChange();
+
   
 }
-
-
 
 scheduleSpreads();

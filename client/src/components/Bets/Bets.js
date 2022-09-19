@@ -53,7 +53,7 @@ export default function BasicTabs(props) {
 
   const [tabIndex, setValue] = useState(0);
   const test = useSelector((state) => state);
-  console.log('redux state', test);
+  // console.log('redux state', test);
 
   const { leagues, bets, teams, scores } = useSelector((state) => state);
 
@@ -115,7 +115,7 @@ export default function BasicTabs(props) {
           <LeagueBets bets={bets.allBets} teams={teams.allTeams} league={leagues.selectedLeague} {...useParams()} />
         </TabPanel>
         <TabPanel value={tabIndex} index={1}>
-          <Team league={leagues.selectedLeague} team={teams.selectedTeam} bets={bets.teamBets} scores={scores} {...useParams()} />
+          <Team league={leagues.selectedLeague} allBets={bets.allBets} team={teams.selectedTeam} bets={bets.teamBets} scores={scores} {...useParams()} />
         </TabPanel>
         <TabPanel value={tabIndex} index={2}>
           <SpreadsList league={leagues.selectedLeague} team={teams.selectedTeam} {...useParams()} />
